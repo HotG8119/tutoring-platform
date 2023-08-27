@@ -1,0 +1,42 @@
+<div class="d-flex">
+    <div class="student-login flex-fill m-5">
+        <div class="mb-4 text-center">
+            <h1 class="h3 font-weight-normal mb-3">學生登入</h1>
+        </div>
+        <form class="form-signin" action="/signin" method="POST">
+            <div class="form-row mb-3">
+                <label class="form-label" for="email">信箱</label>
+                <input class="form-control" id="email" type="text" name="email" class="form-control" placeholder="Email"
+                    required autofocus>
+            </div>
+            <div class="form-row mb-3">
+                <label class="form-label" for="password">密碼</label>
+                <input class="form-control" id="password" type="password" name="password" class="form-control"
+                    placeholder="Password" required>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">登入</button>
+        </form>
+
+    </div>
+    <div class="teacher-login flex-fill m-5">
+        <div class="mb-4 text-center">
+            <h1 class="h3 font-weight-normal mb-3">老師登入</h1>
+        </div>
+        <form class="form-signin" action="/teacher/signin" method="POST">
+            <div class="form-row mb-3">
+                <label class="form-label" for="email">信箱</label>
+                <input class="form-control" id="email" type="text" name="email" class="form-control" placeholder="Email"
+                    required autofocus>
+            </div>
+            <div class="form-row mb-3">
+                <label class="form-label" for="password">密碼</label>
+                <input class="form-control" id="password" type="password" name="password" class="form-control"
+                    placeholder="Password" required>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">登入</button>
+        </form>
+    </div>
+</div>
+<div class="mb-4 text-center">
+    <p>沒有帳號嗎？<a href="/signup">註冊</a></p>
+</div>

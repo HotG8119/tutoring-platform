@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const passport = require('../config/passport')
 
 const admin = require('./modules/admin')
 const classController = require('../controllers/class-controller')
@@ -10,6 +11,10 @@ router.use('/admin', admin)
 
 router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
+router.get('/signin', userController.signInPage)
+router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn) // 注意是 post
+router.get('/logout', userController.logout)
+
 router.get('/classes', classController.getClasses)
 
 router.use('/', (req, res) => res.redirect('/classes'))
