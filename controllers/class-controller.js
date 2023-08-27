@@ -1,5 +1,5 @@
 const classController = {
-  getClass: (req, res) => {
+  getClasses: (req, res) => {
     return res.render('classes')
   }
 }
