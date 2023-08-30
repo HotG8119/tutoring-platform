@@ -2,6 +2,15 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark px-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">英文家教媒合平台</a>
+            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item d-inline-flex align-items-center">
+                    <span class="text-white nav-link">{{ user.name }}</span>
+                </li>
+                <li class="nav-item d-inline-flex align-items-center">
+                    <a href="/users/{{user.id}}/becometeacher"><button
+                            class="btn btn-outline-success my-sm-0 my-2">成為老師</button></a>
+                </li>
+            </ul>
             {{#if user}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,9 +18,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                    <li class="nav-item d-inline-flex align-items-center">
-                        <span class="text-white nav-link">Hi, {{ user.name }}</span>
-                    </li>
+
                     <li class="nav-item">
                         <a href="/logout"><button class="btn btn-outline-success my-sm-0 my-2">Logout</button></a>
                     </li>

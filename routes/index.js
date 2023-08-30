@@ -4,7 +4,7 @@ const passport = require('../config/passport')
 
 const classController = require('../controllers/class-controller')
 const userController = require('../controllers/user-controller')
-const { authenticated } = require('../middleware/auth')
+const { authenticated, authenticatedTeacher } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
 
 router.get('/signup', userController.signUpPage)
@@ -21,6 +21,8 @@ router.get('/auth/google/callback',
 router.get('/logout', userController.logout)
 
 router.get('/classes', authenticated, classController.getClasses)
+
+router.get('/teacher/classes', authenticatedTeacher)
 
 router.use('/', (req, res) => res.redirect('/classes'))
 router.use('/', generalErrorHandler)
