@@ -4,12 +4,31 @@
             <a class="navbar-brand" href="/">英文家教媒合平台</a>
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                 <li class="nav-item d-inline-flex align-items-center">
-                    <span class="text-white nav-link">{{ user.name }}</span>
+                    <a href="/users/{{user.id}}"><button class="btn btn-outline-success my-sm-0 my-2">{{ user.name
+                            }}</button></a>
                 </li>
+                {{!-- {{#if user.isTeacher}}
+                <li class="nav-item d-inline-flex align-items-center">
+                    <a href="/teacher/{{user.id}}"><button
+                            class="btn btn-outline-success my-sm-0 my-2">老師專區</button></a>
+                </li>
+                {{else}}
                 <li class="nav-item d-inline-flex align-items-center">
                     <a href="/users/{{user.id}}/becometeacher"><button
                             class="btn btn-outline-success my-sm-0 my-2">成為老師</button></a>
                 </li>
+                {{/if}} --}}
+
+                <li class="nav-item d-inline-flex align-items-center">
+                    <a href="/teacher/{{user.id}}"><button
+                            class="btn btn-outline-success my-sm-0 my-2">老師專區</button></a>
+
+                <li class="nav-item d-inline-flex align-items-center">
+                    <a href="/users/{{user.id}}/becometeacher"><button
+                            class="btn btn-outline-success my-sm-0 my-2">成為老師</button></a>
+                </li>
+
+
             </ul>
             {{#if user}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"

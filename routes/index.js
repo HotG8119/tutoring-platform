@@ -4,6 +4,7 @@ const passport = require('../config/passport')
 
 const classController = require('../controllers/class-controller')
 const userController = require('../controllers/user-controller')
+const upload = require('../middleware/multer')
 const { authenticated, authenticatedTeacher } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
 
@@ -19,6 +20,10 @@ router.get('/auth/google/callback',
   })
 )
 router.get('/logout', userController.logout)
+
+router.get('/users/:id/edit', authenticated, userController.editUser)
+router.get('/users/:id', authenticated, userController.getUser)
+router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
 router.get('/classes', authenticated, classController.getClasses)
 
