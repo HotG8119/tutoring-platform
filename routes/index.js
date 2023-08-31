@@ -21,6 +21,9 @@ router.get('/auth/google/callback',
 )
 router.get('/logout', userController.logout)
 
+router.get('/users/:id/becometeacher', authenticated, userController.getBecomeTeacher)
+router.post('/users/:id/becometeacher', authenticated, userController.postBecomeTeacher)
+
 router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)

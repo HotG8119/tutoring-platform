@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Classes', {
@@ -8,32 +8,34 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      class_time: {
+        type: Sequelize.DATE
+      },
+      duration: {
         type: Sequelize.STRING
       },
-      tel: {
-        type: Sequelize.STRING
+      is_done: {
+        type: Sequelize.BOOLEAN
       },
-      address: {
-        type: Sequelize.STRING
+      rate: {
+        type: Sequelize.INTEGER
       },
-      openingHours: {
-        type: Sequelize.STRING
-      },
-      description: {
+      message: {
         type: Sequelize.TEXT
+      },
+      user_id: {
+        type: Sequelize.INTEGER
+      },
+      teacher_info_id: {
+        type: Sequelize.INTEGER
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
-    });
+    })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Classes');
+    await queryInterface.dropTable('Classes')
   }
-};
+}

@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       // define association here
-      Class.belongsTo(models.User, { foreignKey: 'UserId' })
-      Class.belongsTo(models.TeacherInfo, { foreignKey: 'TeacherInfoId' })
+      Class.belongsTo(models.User, { foreignKey: 'userId' })
+      Class.belongsTo(models.TeacherInfo, { foreignKey: 'teacherInfoId' })
     }
   };
   Class.init({
@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     isDone: DataTypes.BOOLEAN,
     rate: DataTypes.INTEGER,
     message: DataTypes.TEXT,
+    userId: DataTypes.INTEGER,
+    teacherInfoId: DataTypes.INTEGER,
     createdAt: DataTypes.DATE
   }, {
     sequelize,

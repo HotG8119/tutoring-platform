@@ -8,20 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      tel: {
-        type: Sequelize.STRING
-      },
-      address: {
-        type: Sequelize.STRING
-      },
-      openingHours: {
-        type: Sequelize.STRING
-      },
-      description: {
+      class_introduce: {
         type: Sequelize.TEXT
+      },
+      method: {
+        type: Sequelize.TEXT
+      },
+      class_link: {
+        type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.STRING
+      },
+      user_id: {
+        type: Sequelize.INTEGER
       },
       created_at: {
         allowNull: false,

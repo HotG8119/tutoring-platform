@@ -1,0 +1,19 @@
+<div class="mb-4 text-center">
+    <h1 class="h3 font-weight-normal mb-3">申請成為老師</h1>
+</div>
+<form class="form-signup" action="/users/{{user.id}}/becometeacher" method="POST" style="width: 100%;">
+    <h2>{{user.name}}</h2>
+    <div class="form-row mb-3">
+        <label class="form-label" for="classIntroduce">課程介紹</label>
+        <textarea class="form-control" id="classIntroduce" name="classIntroduce" rows="3" required></textarea>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="method">課程方式</label>
+        <textarea class="form-control" id="method" name="method" rows="5"></textarea>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="classLink">課程視訊連結</label>
+        <input type="text" id="classLink" name="classLink" class="form-control" required>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">提出申請</button>
+</form>

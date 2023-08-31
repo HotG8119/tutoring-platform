@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
+const { User, TeacherInfo } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
@@ -57,7 +57,6 @@ const userController = {
   },
   putUser: (req, res, next) => {
     const { name, introduce } = req.body
-    console.log(name, introduce)
     if (!name) throw new Error('請輸入姓名！')
     const { file } = req
     Promise.all([
@@ -74,6 +73,42 @@ const userController = {
       .then(() => {
         req.flash('success_messages', '成功更新個人資料！')
         res.redirect(`/users/${req.params.id}`)
+      })
+      .catch(err => next(err))
+  },
+  getBecomeTeacher: (req, res, next) => {
+    const userId = req.user.id
+    Promise.all([
+      User.findByPk(userId, { raw: true }),
+      TeacherInfo.findOne({ where: { userId }, raw: true })
+    ])
+      .then(([user, teacherInfo]) => {
+        if (!user) throw new Error('找不到使用者！')
+        if (teacherInfo) throw new Error('已經是老師！')
+
+        res.render('users/become-teacher')
+        console.log(teacherInfo)
+      })
+      .catch(err => next(err))
+  },
+  postBecomeTeacher: (req, res, next) => {
+    const { classIntroduce, method, classLink } = req.body
+    const userId = req.user.id
+    if (!classIntroduce || !method || !classLink) throw new Error('請填寫所有欄位！')
+
+    User.findByPk(userId)
+      .then(user => {
+        if (!user) throw new Error('找不到使用者！')
+        return TeacherInfo.create({
+          classIntroduce,
+          method,
+          classLink,
+          userId
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '成功提出申請！')
+        res.redirect(`/users/${userId}/becometeacher`)
       })
       .catch(err => next(err))
   }

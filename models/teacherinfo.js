@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       // define association here
-      TeacherInfo.belongsTo(models.User, { foreignKey: 'UserId' })
-      TeacherInfo.hasMany(models.Class, { foreignKey: 'TeacherInfoId' })
+      TeacherInfo.belongsTo(models.User, { foreignKey: 'userId' })
+      TeacherInfo.hasMany(models.Class, { foreignKey: 'teacherInfoId' })
     }
   };
   TeacherInfo.init({
@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     method: DataTypes.TEXT,
     classLink: DataTypes.STRING,
     duration: DataTypes.STRING,
-    createdAt: DataTypes.DATE
+    userId: DataTypes.INTEGER,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'TeacherInfo',
