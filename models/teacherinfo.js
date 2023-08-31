@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     method: DataTypes.TEXT,
     classLink: DataTypes.STRING,
     duration: DataTypes.STRING,
+    availableWeekdays: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

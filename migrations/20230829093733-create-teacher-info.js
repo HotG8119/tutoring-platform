@@ -20,6 +20,9 @@ module.exports = {
       duration: {
         type: Sequelize.STRING
       },
+      available_weekdays: {
+        type: Sequelize.STRING
+      },
       user_id: {
         type: Sequelize.INTEGER
       },

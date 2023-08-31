@@ -92,8 +92,9 @@ const userController = {
       .catch(err => next(err))
   },
   postBecomeTeacher: (req, res, next) => {
-    const { classIntroduce, method, classLink } = req.body
+    const { classIntroduce, method, duration, availableWeekdays, classLink } = req.body
     const userId = req.user.id
+    const availableWeekdaysString = JSON.stringify(availableWeekdays)
     if (!classIntroduce || !method || !classLink) throw new Error('請填寫所有欄位！')
 
     User.findByPk(userId)
@@ -102,13 +103,15 @@ const userController = {
         return TeacherInfo.create({
           classIntroduce,
           method,
+          duration,
+          availableWeekdays: availableWeekdaysString,
           classLink,
           userId
         })
       })
       .then(() => {
         req.flash('success_messages', '成功提出申請！')
-        res.redirect(`/users/${userId}/becometeacher`)
+        res.redirect('/')
       })
       .catch(err => next(err))
   }
