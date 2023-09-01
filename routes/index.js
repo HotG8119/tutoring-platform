@@ -5,7 +5,7 @@ const passport = require('../config/passport')
 const classController = require('../controllers/class-controller')
 const userController = require('../controllers/user-controller')
 const upload = require('../middleware/multer')
-const { authenticated, authenticatedTeacher } = require('../middleware/auth')
+const { authenticated } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
 
 router.get('/signup', userController.signUpPage)
@@ -28,9 +28,13 @@ router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
+// router.get('/teacher/edit/:id', authenticatedTeacher, userController.editTeacher)
+
 router.get('/classes', authenticated, classController.getClasses)
 
-router.get('/teacher/classes', authenticatedTeacher)
+router.get('/teacher/:id/edit', authenticated, userController.editTeacher)
+router.put('/teacher/:id', authenticated, userController.putTeacher)
+router.get('/teacher/:id', authenticated, userController.getTeacher)
 
 router.use('/', (req, res) => res.redirect('/classes'))
 router.use('/', generalErrorHandler)

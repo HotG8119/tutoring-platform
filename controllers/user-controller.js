@@ -114,7 +114,73 @@ const userController = {
         res.redirect('/')
       })
       .catch(err => next(err))
+  },
+  getTeacher: (req, res, next) => {
+    const userId = req.params.id
+    User.findByPk(userId, {
+      raw: true,
+      nest: true,
+      include: [
+        { model: TeacherInfo }
+      ]
+    })
+      .then(user => {
+        console.log('user', user)
+        if (!user) throw new Error('找不到使用者！')
+        return res.render('users/teacher', { user })
+      })
+      .catch(err => next(err))
+  },
+  editTeacher: (req, res, next) => {
+    const userId = req.user.id
+    TeacherInfo.findOne({ where: { userId }, raw: true })
+      .then(teacherInfo => {
+        teacherInfo.availableWeekdays = JSON.parse(teacherInfo.availableWeekdays)
+        const weekdays = [
+          { value: '1', label: '星期一', checked: teacherInfo.availableWeekdays.includes('1') },
+          { value: '2', label: '星期二', checked: teacherInfo.availableWeekdays.includes('2') },
+          { value: '3', label: '星期三', checked: teacherInfo.availableWeekdays.includes('3') },
+          { value: '4', label: '星期四', checked: teacherInfo.availableWeekdays.includes('4') },
+          { value: '5', label: '星期五', checked: teacherInfo.availableWeekdays.includes('5') },
+          { value: '6', label: '星期六', checked: teacherInfo.availableWeekdays.includes('6') },
+          { value: '7', label: '星期日', checked: teacherInfo.availableWeekdays.includes('7') }
+        ]
+        if (!teacherInfo) throw new Error('找不到老師資料！')
+        return res.render('users/edit-teacher', { teacherInfo, weekdays })
+      })
+  },
+  putTeacher: (req, res, next) => {
+    const { classIntroduce, method, duration, classLink } = req.body
+    const userId = req.user.id
+    const availableWeekdaysString = JSON.stringify(req.body.availableWeekdays)
+    if (!classIntroduce || !method || !classLink) throw new Error('請填寫所有欄位！')
+
+    TeacherInfo.findOne({ where: { userId } })
+      .then(teacherInfo => {
+        if (!teacherInfo) throw new Error('找不到老師資料！')
+        console.log(teacherInfo)
+        return teacherInfo.update({
+          classIntroduce,
+          method,
+          duration,
+          availableWeekdays: availableWeekdaysString,
+          classLink
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '成功更新課程資訊與時間！')
+        res.redirect(`/teacher/${userId}`)
+      })
+      .catch(err => next(err))
   }
+  // editTeacher: (req, res, next) => {
+  //   const userId = req.user.id
+  //   TeacherInfo.findOne({ where: { userId }, raw: true })
+  //     .then(teacherInfo => {
+  //       if (!teacherInfo) throw new Error('找不到老師資料！')
+  //       return res.render('users/edit-teacher', { teacherInfo })
+  //     })
+  // }
 }
 
 module.exports = userController

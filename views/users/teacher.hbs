@@ -9,7 +9,6 @@
             <h5>關於我</h5>
             <p>{{user.introduce}}</p>
         </div>
-        <p><a class="btn btn-outline-secondary" href="/users/{{user.id}}/edit">edit</a></p>
     </div>
 
     <div class="col-md-8">
@@ -18,21 +17,8 @@
                 <li><strong>{{user.name}}</strong></li>
                 <li>{{user.email}}</li>
             </ul>
+            <p><a class="btn btn-outline-secondary" href="/teacher/{{user.id}}/edit">編輯課程資訊與時間</a></p>
         </div>
-    </div>
-    <div>
-        {{!-- <h3>{{user.Comments.length}} 已評論餐廳</h3>
-        {{#if user.Comments}}
-        {{#each user.Comments}}
-        <div class="card d-inline-flex mr-2" style="width: 10rem;">
-            <a href="/restaurants/{{this.Restaurant.id}}">
-                <img src="{{this.Restaurant.image}}" class="card-img-top">
-            </a>
-        </div>
-        {{/each}}
-        {{else}}
-        <p><strong>尚未評論餐廳</strong></p>
-        {{/if}} --}}
     </div>
 </div>
 <hr>

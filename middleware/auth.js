@@ -8,16 +8,6 @@ const authenticated = (req, res, next) => {
   res.redirect('/signin')
 }
 
-const authenticatedTeacher = (req, res, next) => {
-  if (helpers.ensureAuthenticated(req)) {
-    if (helpers.getUser(req).isTeacher) return next()
-    return res.redirect('/')
-  } else {
-    res.redirect('/signin')
-  }
-}
-
 module.exports = {
-  authenticated,
-  authenticatedTeacher
+  authenticated
 }
