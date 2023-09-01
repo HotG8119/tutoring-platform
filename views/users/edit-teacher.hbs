@@ -22,6 +22,7 @@
     <div class="form-row mb-3">
         <label class="form-label" for="availableWeekdays">可預約時間：</label>
         <div class="d-inline-flex">
+            {{#if weekdays}}
             {{#each weekdays}}
             <div class="form-check ms-3">
                 <input class="form-check-input" type="checkbox" id="weekday{{this.value}}" name="availableWeekdays"
@@ -29,6 +30,36 @@
                 <label class="form-check-label" for="weekday{{this.value}}">{{this.label}}</label>
             </div>
             {{/each}}
+            {{else}}
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday1" name="availableWeekdays" value="1">
+                <label class="form-check-label" for="weekday1">星期一</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday2" name="availableWeekdays" value="2">
+                <label class="form-check-label" for="weekday2">星期二</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday3" name="availableWeekdays" value="3">
+                <label class="form-check-label" for="weekday3">星期三</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday4" name="availableWeekdays" value="4">
+                <label class="form-check-label" for="weekday4">星期四</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday5" name="availableWeekdays" value="5">
+                <label class="form-check-label" for="weekday5">星期五</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday6" name="availableWeekdays" value="6">
+                <label class="form-check-label" for="weekday6">星期六</label>
+            </div>
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="weekday7" name="availableWeekdays" value="7">
+                <label class="form-check-label" for="weekday7">星期日</label>
+            </div>
+            {{/if}}
         </div>
     </div>
 

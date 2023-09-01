@@ -135,19 +135,23 @@ const userController = {
     const userId = req.user.id
     TeacherInfo.findOne({ where: { userId }, raw: true })
       .then(teacherInfo => {
-        teacherInfo.availableWeekdays = JSON.parse(teacherInfo.availableWeekdays)
-        const weekdays = [
-          { value: '1', label: '星期一', checked: teacherInfo.availableWeekdays.includes('1') },
-          { value: '2', label: '星期二', checked: teacherInfo.availableWeekdays.includes('2') },
-          { value: '3', label: '星期三', checked: teacherInfo.availableWeekdays.includes('3') },
-          { value: '4', label: '星期四', checked: teacherInfo.availableWeekdays.includes('4') },
-          { value: '5', label: '星期五', checked: teacherInfo.availableWeekdays.includes('5') },
-          { value: '6', label: '星期六', checked: teacherInfo.availableWeekdays.includes('6') },
-          { value: '7', label: '星期日', checked: teacherInfo.availableWeekdays.includes('7') }
-        ]
         if (!teacherInfo) throw new Error('找不到老師資料！')
-        return res.render('users/edit-teacher', { teacherInfo, weekdays })
+        if (teacherInfo.availableWeekdays) {
+          teacherInfo.availableWeekdays = JSON.parse(teacherInfo.availableWeekdays)
+          const weekdays = [
+            { value: '1', label: '星期一', checked: teacherInfo.availableWeekdays.includes('1') },
+            { value: '2', label: '星期二', checked: teacherInfo.availableWeekdays.includes('2') },
+            { value: '3', label: '星期三', checked: teacherInfo.availableWeekdays.includes('3') },
+            { value: '4', label: '星期四', checked: teacherInfo.availableWeekdays.includes('4') },
+            { value: '5', label: '星期五', checked: teacherInfo.availableWeekdays.includes('5') },
+            { value: '6', label: '星期六', checked: teacherInfo.availableWeekdays.includes('6') },
+            { value: '7', label: '星期日', checked: teacherInfo.availableWeekdays.includes('7') }
+          ]
+          return res.render('users/edit-teacher', { teacherInfo, weekdays })
+        }
+        return res.render('users/edit-teacher', { teacherInfo })
       })
+      .catch(err => next(err))
   },
   putTeacher: (req, res, next) => {
     const { classIntroduce, method, duration, classLink } = req.body
