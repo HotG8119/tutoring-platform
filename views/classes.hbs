@@ -2,6 +2,23 @@
     <div class="row d-flex justify-content-center">
         <div class="col-md-8 m-3" style="outline:1px tomato solid">
             <div class="row">
+
+                <div class="row" id="search-bar">
+                    <div class="col-12">
+                        <form action="/teachers/search">
+                            <div class="input-group mb-3">
+                                <input type="text" name="keyword" class="form-control" placeholder="請輸入關鍵字"
+                                    aria-label="keyword" aria-describedby="search-button" value="{{keyword}}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit"
+                                        id="search-button">搜尋</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
                 {{#each teacherInfos}}
                 <div class="card m-2" style="max-width: 400px;">
                     <div class="row g-0">
