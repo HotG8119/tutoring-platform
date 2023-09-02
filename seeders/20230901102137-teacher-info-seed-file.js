@@ -26,6 +26,7 @@ module.exports = {
         }
       })
     )
+    console.log('TeacherInfos seed data created successfully')
   },
   down: async (queryInterface, Sequelize) => { // 清空資料表中所有資料
     await queryInterface.bulkDelete('TeacherInfos', {})

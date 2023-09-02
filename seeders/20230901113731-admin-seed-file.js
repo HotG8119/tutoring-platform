@@ -11,6 +11,7 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     }])
+    console.log('Admins seed data created successfully')
   },
   down: async (queryInterface, Sequelize) => { // 清空資料表中所有資料
     await queryInterface.bulkDelete('Admins', {})

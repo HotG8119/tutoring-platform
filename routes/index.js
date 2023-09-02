@@ -28,15 +28,13 @@ router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
-// router.get('/teacher/edit/:id', authenticatedTeacher, userController.editTeacher)
-
-router.get('/classes', authenticated, classController.getClasses)
-
 router.get('/teacher/:id/edit', authenticated, userController.editTeacher)
 router.put('/teacher/:id', authenticated, userController.putTeacher)
 router.get('/teacher/:id', authenticated, userController.getTeacher)
 
-router.use('/', (req, res) => res.redirect('/classes'))
+router.get('/teachers', authenticated, classController.getTeachers)
+
+router.use('/', (req, res) => res.redirect('/teachers'))
 router.use('/', generalErrorHandler)
 
 module.exports = router
