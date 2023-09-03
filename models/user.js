@@ -23,8 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       defaultValue: 'https://i.imgur.com/hepj9ZS.png'
-    },
-    isTeacher: DataTypes.BOOLEAN
+    }
   }, {
     sequelize,
     modelName: 'User',

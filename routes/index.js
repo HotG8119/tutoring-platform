@@ -32,8 +32,9 @@ router.get('/teacher/:id/edit', authenticated, userController.editTeacher)
 router.put('/teacher/:id', authenticated, userController.putTeacher)
 router.get('/teacher/:id', authenticated, userController.getTeacher)
 
-router.get('/teachers', authenticated, classController.getTeachers)
+router.get('/teachers/:id', authenticated, classController.getTeacher)
 router.get('/teachers/search', authenticated, classController.getSearchedTeachers)
+router.get('/teachers', authenticated, classController.getTeachers)
 
 router.use('/', (req, res) => res.redirect('/teachers'))
 router.use('/', generalErrorHandler)

@@ -2,8 +2,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const bcrypt = require('bcryptjs')
-const db = require('../models')
-const User = db.User
+const { User, TeacherInfo } = require('../models')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -16,12 +15,28 @@ passport.use(new LocalStrategy(
     passReqToCallback: true
   },
   (req, email, password, cb) => {
-    User.findOne({ where: { email } })
+    User.findOne({
+      where: { email },
+      raw: true
+    })
       .then(user => {
         if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+
         bcrypt.compare(password, user.password).then(res => {
           if (!res) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
-          return cb(null, user)
+          // 查詢是否為老師
+          TeacherInfo.findOne({
+            where: { userId: user.id },
+            raw: true
+          })
+            .then(teacherInfo => {
+              if (teacherInfo) {
+                user.isTeacher = true
+              } else {
+                user.isTeacher = false
+              }
+              return cb(null, user)
+            })
         })
       })
   }
@@ -49,7 +64,20 @@ passport.use(new GoogleStrategy(
             email,
             password: hash
           }))
-          .then(user => cb(null, user))
+          .then(user => {
+            TeacherInfo.findOne({
+              where: { userId: user.id },
+              raw: true
+            })
+              .then(teacherInfo => {
+                if (teacherInfo) {
+                  user.isTeacher = true
+                } else {
+                  user.isTeacher = false
+                }
+                return cb(null, user)
+              })
+          })
           .catch(err => cb(err, false))
       })
   }))

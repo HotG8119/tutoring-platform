@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     rate: DataTypes.INTEGER,
     message: DataTypes.TEXT,
     userId: DataTypes.INTEGER,
-    teacherInfoId: DataTypes.INTEGER,
+    teacherId: DataTypes.INTEGER,
     createdAt: DataTypes.DATE
   }, {
     sequelize,

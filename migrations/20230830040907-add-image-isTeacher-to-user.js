@@ -5,7 +5,7 @@ module.exports = {
       type: Sequelize.STRING
     })
 
-    await queryInterface.addColumn('Users', 'is_Teacher', {
+    await queryInterface.addColumn('Users', 'is_teacher', {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     })

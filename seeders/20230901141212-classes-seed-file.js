@@ -44,7 +44,7 @@ module.exports = {
             duration: teacherInfos[0][randomTeacherNum].duration,
             is_done: true,
             user_id: user.id,
-            teacher_info_id: teacherInfos[0][randomTeacherNum].user_id,
+            teacher_id: teacherInfos[0][randomTeacherNum].user_id,
             created_at: new Date()
           })
         })
@@ -64,7 +64,7 @@ module.exports = {
             rate: Math.floor(Math.random() * 5) + 1,
             message: faker.lorem.text().substring(0, 80),
             user_id: users[0][randomUserNum].id,
-            teacher_info_id: teacherInfo.user_id,
+            teacher_id: teacherInfo.user_id,
             created_at: new Date()
           })
         })
@@ -81,7 +81,7 @@ module.exports = {
             class_time: getRandomFutureTime(),
             duration: teacherInfo.duration,
             user_id: users[0][randomUserNum].id,
-            teacher_info_id: teacherInfo.user_id,
+            teacher_id: teacherInfo.user_id,
             created_at: new Date()
           })
         })

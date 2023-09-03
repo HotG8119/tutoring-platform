@@ -13,10 +13,19 @@
 
     <div class="col-md-8">
         <div class="well">
-            <ul class="list-unstyled">
+            <div id="new-schedule">
+                <h5>最新課程</h5>
+                <p>{{user.TeacherInfo.newSchedule}}</p>
+            </div>
+            <div id="teaching-style">
+                <h5>教學風格</h5>
+                <p>{{user.TeacherInfo.method}}</p>
+            </div>
+            <div id="recent-reviewed"></div>
+            {{!-- <ul class="list-unstyled">
                 <li><strong>{{user.name}}</strong></li>
                 <li>{{user.email}}</li>
-            </ul>
+            </ul> --}}
             <p><a class="btn btn-outline-secondary" href="/teacher/{{user.id}}/edit">編輯課程資訊與時間</a></p>
         </div>
     </div>

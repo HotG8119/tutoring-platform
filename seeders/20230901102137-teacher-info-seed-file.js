@@ -11,6 +11,9 @@ module.exports = {
     await queryInterface.bulkInsert('TeacherInfos',
       // 讓10位使用者都有老師資料
       Array.from({ length: 10 }).map((d, i) => {
+        // 將對應的 user_id 讓User.isTeacher = true
+        queryInterface.sequelize.query(`UPDATE Users SET is_teacher = true WHERE id = ${shuffledUsers[i].id}`)
+
         return {
           class_introduce: faker.lorem.text().substring(0, 80),
           method: faker.lorem.text().substring(0, 80),
@@ -21,8 +24,7 @@ module.exports = {
           // Array.from({ length: 7 }, (_, i) => (i + 1).toString())是產生一個長度為7的陣列，裡面的值是1~7的字串
           // sort(() => 0.5 - Math.random())是將陣列隨機排序
           user_id: shuffledUsers[i].id,
-          created_at: new Date(),
-          updated_at: new Date()
+          created_at: new Date()
         }
       })
     )
@@ -30,5 +32,6 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => { // 清空資料表中所有資料
     await queryInterface.bulkDelete('TeacherInfos', {})
+    await queryInterface.sequelize.query('UPDATE Users SET is_teacher = false;')
   }
 }

@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, TeacherInfo } = require('../models')
+const { User, TeacherInfo, Class } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
@@ -100,6 +100,7 @@ const userController = {
     User.findByPk(userId)
       .then(user => {
         if (!user) throw new Error('找不到使用者！')
+        user.update({ isTeacher: true })
         return TeacherInfo.create({
           classIntroduce,
           method,
@@ -117,19 +118,29 @@ const userController = {
   },
   getTeacher: (req, res, next) => {
     const userId = req.params.id
-    User.findByPk(userId, {
-      raw: true,
-      nest: true,
-      include: [
-        { model: TeacherInfo }
-      ]
+    // 用userId從Class.teacherId找出所有的class
+
+    Class.findAll({
+      where: { userId: userId },
+      raw: true
     })
-      .then(user => {
-        console.log('user', user)
-        if (!user) throw new Error('找不到使用者！')
-        return res.render('users/teacher', { user })
+      .then(classes => {
+        console.log(classes)
       })
       .catch(err => next(err))
+
+    // User.findByPk(userId, {
+    //   raw: true,
+    //   nest: true,
+    //   include: [
+    //     { model: TeacherInfo }
+    //   ]
+    // })
+    //   .then(user => {
+    //     if (!user) throw new Error('找不到使用者！')
+    //     return res.render('users/teacher', { user })
+    //   })
+    //   .catch(err => next(err))
   },
   editTeacher: (req, res, next) => {
     const userId = req.user.id
