@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     message: DataTypes.TEXT,
     userId: DataTypes.INTEGER,
     teacherId: DataTypes.INTEGER,
-    createdAt: DataTypes.DATE
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Class',

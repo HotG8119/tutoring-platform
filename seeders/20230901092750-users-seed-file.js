@@ -21,6 +21,7 @@ module.exports = {
       image: 'https://i.imgur.com/hepj9ZS.png',
       created_at: new Date(),
       updated_at: new Date()
+
     }, {
       name: 'user3',
       email: 'user3@example.com',

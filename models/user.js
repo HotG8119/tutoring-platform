@@ -23,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       defaultValue: 'https://i.imgur.com/hepj9ZS.png'
-    }
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'User',

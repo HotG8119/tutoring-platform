@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     duration: DataTypes.STRING,
     availableWeekdays: DataTypes.STRING,
     userId: DataTypes.INTEGER,
+    teacherId: DataTypes.INTEGER,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {

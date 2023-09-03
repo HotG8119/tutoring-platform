@@ -8,8 +8,7 @@ module.exports = {
       name: 'root',
       email: 'root@example.com',
       password: await bcrypt.hash('12345678', 10),
-      created_at: new Date(),
-      updated_at: new Date()
+      created_at: new Date()
     }])
     console.log('Admins seed data created successfully')
   },

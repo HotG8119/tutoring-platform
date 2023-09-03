@@ -24,7 +24,8 @@ module.exports = {
           // Array.from({ length: 7 }, (_, i) => (i + 1).toString())是產生一個長度為7的陣列，裡面的值是1~7的字串
           // sort(() => 0.5 - Math.random())是將陣列隨機排序
           user_id: shuffledUsers[i].id,
-          created_at: new Date()
+          created_at: new Date(),
+          updated_at: new Date()
         }
       })
     )
