@@ -4,6 +4,7 @@ const sequelize = require('sequelize')
 
 const classController = {
   getTeachers: (req, res, next) => {
+    console.log(req.user)
     const DEFAULT_LIMIT = 6
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || DEFAULT_LIMIT

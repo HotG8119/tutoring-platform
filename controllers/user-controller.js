@@ -97,18 +97,20 @@ const userController = {
     const availableWeekdaysString = JSON.stringify(availableWeekdays)
     if (!classIntroduce || !method || !classLink) throw new Error('請填寫所有欄位！')
 
-    User.findByPk(userId)
-      .then(user => {
+    return Promise.all([
+      User.findByPk(userId),
+      TeacherInfo.create({
+        classIntroduce,
+        method,
+        duration,
+        availableWeekdays: availableWeekdaysString,
+        classLink,
+        userId
+      })
+    ])
+      .then(([user, teacherInfo]) => {
         if (!user) throw new Error('找不到使用者！')
-        user.update({ isTeacher: true })
-        return TeacherInfo.create({
-          classIntroduce,
-          method,
-          duration,
-          availableWeekdays: availableWeekdaysString,
-          classLink,
-          userId
-        })
+        return user.update({ isTeacher: true })
       })
       .then(() => {
         req.flash('success_messages', '成功提出申請！')
@@ -116,34 +118,43 @@ const userController = {
       })
       .catch(err => next(err))
   },
-  getTeacher: (req, res, next) => {
-    const userId = req.params.id
+  getTeacherInfo: (req, res, next) => {
+    const userId = req.user.id
+    if (userId !== Number(req.params.id)) {
+      req.flash('error_messages', '沒有權限！')
+      return res.redirect('/teachers')
+    }
     // 用userId從Class.teacherId找出所有的class
 
-    Class.findAll({
-      where: { userId: userId },
-      raw: true
-    })
-      .then(classes => {
-        console.log(classes)
-      })
-      .catch(err => next(err))
-
-    // User.findByPk(userId, {
-    //   raw: true,
-    //   nest: true,
-    //   include: [
-    //     { model: TeacherInfo }
-    //   ]
+    // Class.findAll({
+    //   where: { userId: userId },
+    //   raw: true
     // })
-    //   .then(user => {
-    //     if (!user) throw new Error('找不到使用者！')
-    //     return res.render('users/teacher', { user })
+    //   .then(classes => {
+    //     console.log(classes)
     //   })
     //   .catch(err => next(err))
+
+    User.findByPk(userId, {
+      raw: true,
+      nest: true,
+      include: [
+        { model: TeacherInfo }
+      ]
+    })
+      .then(user => {
+        if (!user) throw new Error('找不到使用者！')
+        return res.render('users/teacher', { user })
+      })
+      .catch(err => next(err))
   },
-  editTeacher: (req, res, next) => {
+  editTeacherInfo: (req, res, next) => {
     const userId = req.user.id
+    if (userId !== Number(req.params.id)) {
+      req.flash('error_messages', '沒有權限！')
+      return res.redirect('/teachers')
+    }
+
     TeacherInfo.findOne({ where: { userId }, raw: true })
       .then(teacherInfo => {
         if (!teacherInfo) throw new Error('找不到老師資料！')
@@ -164,10 +175,15 @@ const userController = {
       })
       .catch(err => next(err))
   },
-  putTeacher: (req, res, next) => {
+  putTeacherInfo: (req, res, next) => {
     const { classIntroduce, method, duration, classLink } = req.body
     const userId = req.user.id
     const availableWeekdaysString = JSON.stringify(req.body.availableWeekdays)
+
+    if (userId !== Number(req.params.id)) {
+      req.flash('error_messages', '沒有權限！！')
+      return res.redirect('/teachers')
+    }
     if (!classIntroduce || !method || !classLink) throw new Error('請填寫所有欄位！')
 
     TeacherInfo.findOne({ where: { userId } })

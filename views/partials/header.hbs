@@ -2,25 +2,25 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark px-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">英文家教媒合平台</a>
-            {{#if currentUser}}
+            {{#if user}}
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
 
                 <li class="nav-item d-inline-flex align-items-center">
-                    <a href="/users/{{currentUser.id}}"><button class="btn btn-outline-success my-sm-0 my-2">{{
-                            currentUser.name
+                    <a href="/users/{{user.id}}"><button class="btn btn-outline-success my-sm-0 my-2">{{
+                            user.name
                             }}</button></a>
                 </li>
-                {{!-- {{#if currentUser.isTeacher}} --}}
+                {{#if user.isTeacher}}
                 <li class="nav-item d-inline-flex align-items-center">
-                    <a href="/teacher/{{currentUser.id}}"><button
+                    <a href="/teacher/{{user.id}}"><button
                             class="btn btn-outline-success my-sm-0 my-2">老師專區</button></a>
                 </li>
-                {{!-- {{else}} --}}
+                {{else}}
                 <li class="nav-item d-inline-flex align-items-center">
-                    <a href="/users/{{currentUser.id}}/becometeacher"><button
+                    <a href="/users/{{user.id}}/becometeacher"><button
                             class="btn btn-outline-success my-sm-0 my-2">成為老師</button></a>
                 </li>
-                {{!-- {{/if}} --}}
+                {{/if}}
 
             </ul>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"

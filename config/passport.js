@@ -2,7 +2,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const bcrypt = require('bcryptjs')
-const { User, TeacherInfo } = require('../models')
+const { User } = require('../models')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -24,19 +24,8 @@ passport.use(new LocalStrategy(
 
         bcrypt.compare(password, user.password).then(res => {
           if (!res) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
-          // 查詢是否為老師
-          TeacherInfo.findOne({
-            where: { userId: user.id },
-            raw: true
-          })
-            .then(teacherInfo => {
-              if (teacherInfo) {
-                user.isTeacher = true
-              } else {
-                user.isTeacher = false
-              }
-              return cb(null, user)
-            })
+          console.log(user)
+          return cb(null, user)
         })
       })
   }
@@ -65,18 +54,7 @@ passport.use(new GoogleStrategy(
             password: hash
           }))
           .then(user => {
-            TeacherInfo.findOne({
-              where: { userId: user.id },
-              raw: true
-            })
-              .then(teacherInfo => {
-                if (teacherInfo) {
-                  user.isTeacher = true
-                } else {
-                  user.isTeacher = false
-                }
-                return cb(null, user)
-              })
+            return cb(null, user)
           })
           .catch(err => cb(err, false))
       })

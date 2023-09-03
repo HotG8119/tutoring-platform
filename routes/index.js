@@ -28,9 +28,9 @@ router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
-router.get('/teacher/:id/edit', authenticated, userController.editTeacher)
-router.put('/teacher/:id', authenticated, userController.putTeacher)
-router.get('/teacher/:id', authenticated, userController.getTeacher)
+router.get('/teacher/:id/edit', authenticated, userController.editTeacherInfo)
+router.put('/teacher/:id', authenticated, userController.putTeacherInfo)
+router.get('/teacher/:id', authenticated, userController.getTeacherInfo)
 
 router.get('/teachers/:id', authenticated, classController.getTeacher)
 router.get('/teachers/search', authenticated, classController.getSearchedTeachers)
