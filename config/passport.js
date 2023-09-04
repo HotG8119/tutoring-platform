@@ -24,7 +24,6 @@ passport.use(new LocalStrategy(
 
         bcrypt.compare(password, user.password).then(res => {
           if (!res) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
-          console.log(user)
           return cb(null, user)
         })
       })
@@ -40,7 +39,6 @@ passport.use(new GoogleStrategy(
   },
   (accessToken, refreshToken, profile, cb) => {
     const { name, email } = profile._json
-    console.log(name, email)
     User.findOne({ where: { email } })
       .then(user => {
         if (user) return cb(null, user)

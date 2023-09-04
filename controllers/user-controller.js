@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const { User, TeacherInfo, Class } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
+const dayjs = require('dayjs')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -86,8 +87,7 @@ const userController = {
         if (!user) throw new Error('找不到使用者！')
         if (teacherInfo) throw new Error('已經是老師！')
 
-        res.render('users/become-teacher')
-        console.log(teacherInfo)
+        return res.render('users/become-teacher')
       })
       .catch(err => next(err))
   },
@@ -124,16 +124,6 @@ const userController = {
       req.flash('error_messages', '沒有權限！')
       return res.redirect('/teachers')
     }
-    // 用userId從Class.teacherId找出所有的class
-
-    // Class.findAll({
-    //   where: { userId: userId },
-    //   raw: true
-    // })
-    //   .then(classes => {
-    //     console.log(classes)
-    //   })
-    //   .catch(err => next(err))
 
     User.findByPk(userId, {
       raw: true,
@@ -144,7 +134,34 @@ const userController = {
     })
       .then(user => {
         if (!user) throw new Error('找不到使用者！')
-        return res.render('users/teacher', { user })
+        console.log(user)
+        // 用user.TeacherInfo.id去找Class,並照時間排列, 並用user_id去找User的名字
+        Class.findAll({
+          raw: true,
+          nest: true,
+          where: { teacherInfoId: user.TeacherInfo.id },
+          order: [['classTime', 'ASC']],
+          include: [
+            { model: User, attributes: ['name'] }
+          ]
+        })
+          .then(classes => {
+          // 找出未來的class，用day.js讓時間變成 mm-dd hh:mm
+            const futureClasses = classes.filter(classItem => {
+              return new Date(classItem.classTime) > new Date()
+            }).map(classItem => {
+              classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
+              return classItem
+            })
+
+            // 找出最新 6 筆已評價過的class
+            const ratedClasses = classes.filter(classItem => {
+              return classItem.rate !== null
+            }).slice(-6)
+            console.log('futureClasses', futureClasses)
+            console.log('ratedClasses', ratedClasses)
+            return res.render('users/teacher', { user, futureClasses, ratedClasses })
+          })
       })
       .catch(err => next(err))
   },
@@ -189,7 +206,6 @@ const userController = {
     TeacherInfo.findOne({ where: { userId } })
       .then(teacherInfo => {
         if (!teacherInfo) throw new Error('找不到老師資料！')
-        console.log(teacherInfo)
         return teacherInfo.update({
           classIntroduce,
           method,

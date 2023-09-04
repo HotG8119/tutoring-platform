@@ -15,22 +15,37 @@
         <div class="well">
             <div id="new-schedule">
                 <h5>最新課程</h5>
-                <p>{{user.TeacherInfo.newSchedule}}</p>
+                <div class="row">
+                    {{#each futureClasses}}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title">課程時間：{{this.classTime}}</p>
+                                <p class="card-text">學生名字：{{this.User.name}}</p>
+                                <a href="#" class="card-link">視訊連結</a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
             </div>
-            <div id="teaching-style">
+            <div class="mt-2" id="teaching-style">
                 <h5>教學風格</h5>
                 <p>{{user.TeacherInfo.method}}</p>
             </div>
-            <div id="recent-reviewed"></div>
-            {{!-- <ul class="list-unstyled">
-                <li><strong>{{user.name}}</strong></li>
-                <li>{{user.email}}</li>
-            </ul> --}}
-            <p><a class="btn btn-outline-secondary" href="/teacher/{{user.id}}/edit">編輯課程資訊與時間</a></p>
+            <div class="mt-2" id="recent-reviewed">
+                <h5>最新評論</h5>
+                <ul class="list-group">
+                    {{#each ratedClasses}}
+                    <li class="list-group-item"><strong class="badge bg-primary rounded-pill"> {{this.rate}}</strong>
+                        {{this.message}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+
+            <div style="margin-top: 5rem; float: right;">
+                <p><a class="btn btn-outline-secondary" href="/teacher/{{user.id}}/edit">編輯課程資訊與時間</a></p>
+            </div>
         </div>
     </div>
 </div>
-<hr>
-
-
-<a class="btn btn-outline-secondary mt-2" href="javascript:history.back()">Back</a>

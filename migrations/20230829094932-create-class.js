@@ -26,7 +26,7 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      teacher_id: {
+      teacher_info_id: {
         type: Sequelize.INTEGER
       },
       created_at: {
