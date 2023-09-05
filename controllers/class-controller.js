@@ -4,7 +4,6 @@ const sequelize = require('sequelize')
 
 const classController = {
   getTeachers: (req, res, next) => {
-    console.log(req.user)
     const DEFAULT_LIMIT = 6
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || DEFAULT_LIMIT
@@ -101,10 +100,29 @@ const classController = {
       where: { userId: req.params.id }
     })
       .then(teacherInfo => {
-        console.log(teacherInfo)
         if (!teacherInfo) throw new Error('沒有這個老師')
         return res.render('teachers', { teacherInfo })
       })
+  },
+  rateClass: (req, res, next) => {
+    const id = req.params.id
+    const { rate, message } = req.body
+    if (!rate) throw new Error('請填寫評分！')
+
+    Class.findByPk(id)
+      .then(classData => {
+        if (!classData) throw new Error('沒有這個課程')
+
+        return classData.update({
+          rate,
+          message
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '評價成功！')
+        res.redirect(`/users/${req.user.id}`)
+      })
+      .catch(error => next(error))
   }
 }
 

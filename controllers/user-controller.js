@@ -39,10 +39,53 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
-    return User.findByPk(req.params.id)
-      .then(user => {
+    const userId = req.user.id
+    if (userId !== Number(req.params.id)) {
+      req.flash('error_messages', '沒有權限！')
+      return res.redirect('/teachers')
+    }
+
+    return Promise.all([
+      User.findByPk(userId, { raw: true }),
+      Class.findAll({
+        raw: true,
+        nest: true,
+        where: { userId },
+        order: [['classTime', 'DESC']],
+        include: [
+          {
+            model: TeacherInfo,
+            attributes: ['userId', 'classLink'],
+            include: [
+              {
+                model: User,
+                attributes: ['name', 'image']
+              }
+            ]
+          }
+        ]
+      })
+    ])
+      .then(([user, classes]) => {
         if (!user) throw new Error('找不到使用者！')
-        return res.render('users/profile', { user: user.toJSON() })
+        // 找出過去的課程，用day.js讓時間變成 mm-dd hh:mm
+        const pastClasses = classes.filter(classItem => {
+          return new Date(classItem.classTime) < new Date()
+        }).map(classItem => {
+          classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
+          return classItem
+        })
+        // 找出未來的課程，用day.js讓時間變成 mm-dd hh:mm
+        const futureClasses = classes.filter(classItem => {
+          return new Date(classItem.classTime) >= new Date()
+        }).map(classItem => {
+          classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
+          return classItem
+        })
+        // console.log('classes', classes)
+        // console.log('futureClasses', futureClasses)
+        console.log('pastClasses', pastClasses)
+        return res.render('users/profile', { user, futureClasses, pastClasses })
       })
       .catch(err => next(err))
   },
@@ -134,7 +177,6 @@ const userController = {
     })
       .then(user => {
         if (!user) throw new Error('找不到使用者！')
-        console.log(user)
         // 用user.TeacherInfo.id去找Class,並照時間排列, 並用user_id去找User的名字
         Class.findAll({
           raw: true,
@@ -158,8 +200,6 @@ const userController = {
             const ratedClasses = classes.filter(classItem => {
               return classItem.rate !== null
             }).slice(-6)
-            console.log('futureClasses', futureClasses)
-            console.log('ratedClasses', ratedClasses)
             return res.render('users/teacher', { user, futureClasses, ratedClasses })
           })
       })
@@ -220,14 +260,6 @@ const userController = {
       })
       .catch(err => next(err))
   }
-  // editTeacher: (req, res, next) => {
-  //   const userId = req.user.id
-  //   TeacherInfo.findOne({ where: { userId }, raw: true })
-  //     .then(teacherInfo => {
-  //       if (!teacherInfo) throw new Error('找不到老師資料！')
-  //       return res.render('users/edit-teacher', { teacherInfo })
-  //     })
-  // }
 }
 
 module.exports = userController
