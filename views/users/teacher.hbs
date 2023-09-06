@@ -37,8 +37,8 @@
                 <h5>最新評論</h5>
                 <ul class="list-group">
                     {{#each ratedClasses}}
-                    <li class="list-group-item"><strong class="badge bg-primary rounded-pill"> {{this.rate}}</strong>
-                        {{this.message}}</li>
+                    <li class="list-group-item"><strong class="badge bg-primary rounded-pill">{{this.rate}}</strong>
+                        {{#if this.message}}{{this.message}}{{else}}沒有留下評論{{/if}}</li>
                     {{/each}}
                 </ul>
             </div>

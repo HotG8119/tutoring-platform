@@ -1,24 +1,86 @@
-{{!-- <div class="row mb-5">
-    <div class="col-md-12">
-        <h1>{{restaurant.name}}</h1>
-        <p>[{{restaurant.Category.name}}]</p>
-    </div>
-    <div class="col-md-4">
-        <img class="img-responsive center-block mb-5" src="{{restaurant.image}}"
-            style="width: 250px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
-        <div class="well">
-            <ul class="list-unstyled">
-                <li><strong>Opening Hour:</strong> {{restaurant.openingHours}}</li>
-                <li><strong>Tel:</strong> {{restaurant.tel}}</li>
-                <li><strong>Address:</strong> {{restaurant.address}}</li>
-            </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row" id="image-name">
+                <div class="col-md-5">
+                    <img class="img-responsive center-block" src="{{teacherInfo.User.image}}"
+                        style="width: 250px; margin-bottom: 25px; transition: opacity 0.5s; opacity:0;"
+                        onload="this.style.opacity=1;">
+                </div>
+                <div class="col-md-5">
+                    <h2>{{teacherInfo.User.name}}</h2>
+                </div>
+            </div>
+            <div id="introduction">
+                <h4>課程介紹：</h4>
+                <p>{{teacherInfo.classIntroduce}}</p>
+            </div>
+            <div id="method">
+                <h4>教學方式：</h4>
+                <p>{{teacherInfo.method}}</p>
+            </div>
+
+            <div id="class-history">
+                <h4>課程評價：</h4>
+                {{#each ratedClasses}}
+                <div class="class-info m-2">
+                    <strong class="class-rate badge bg-primary">{{this.rate}}</strong>
+                    ：
+                    <span class="class-message">{{#if this.message}}{{this.message}}{{else}}沒有留下評論{{/if}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <form action="/teachers/{{teacherInfo.id}}/bookClass" method="POST">
+                <h4>預約上課</h4>
+                <select name="bookDate" id="bookDate">
+                    {{#each availableTimesAfterBooked}}
+                    <option id="selected-date" value="{{this}}">{{this}}</option>
+                    {{/each}}
+                </select>
+
+                <!-- Button trigger modal -->
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#book-class-model">
+                    預約
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="book-class-model" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">預約成功</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>老師：{{teacherInfo.User.name}}</p>
+                                <p id="booked-date">時間：</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
-    <div class="col-md-8">
-        <p style="white-space: break-spaces;">{{restaurant.description}}</p>
-    </div>
-    <hr>
 </div>
-<a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a> --}}
 
-teachers
+
+
+<script>
+    const buttonElement = document.getElementById('book-class');
+    const selectElement = document.getElementById('bookDate');
+    const bookedDateElement = document.getElementById('booked-date');
+
+    selectElement.addEventListener('change', function () {
+        const selectedDate = this.value;
+        bookedDateElement.textContent = `時間：${selectedDate}`;
+    });
+
+</script>

@@ -55,7 +55,7 @@ const userController = {
         include: [
           {
             model: TeacherInfo,
-            attributes: ['userId', 'classLink'],
+            attributes: ['id', 'userId', 'classLink'],
             include: [
               {
                 model: User,

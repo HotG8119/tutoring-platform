@@ -22,8 +22,12 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="card-title">課程時間：{{this.classTime}}</p>
-                                <p class="card-text">老師名字：{{this.TeacherInfo.User.name}}</p>
-                                <a href="{{this.TeacherInfo.classLink}}" class="card-link">視訊連結</a>
+                                <p class="card-text">老師名字：<a
+                                        href="/teachers/{{this.TeacherInfo.User.id}}">{{this.TeacherInfo.User.name}}</a>
+                                </p>
+                                <p class="card-link">視訊連結：<a
+                                        href="{{this.TeacherInfo.classLink}}">{{this.TeacherInfo.classLink}}</a></p>
+
                             </div>
                         </div>
                     </div>
@@ -94,7 +98,9 @@
                         {{/if}}
                         <img src="{{this.TeacherInfo.User.image}}" alt="Teacher Image" class="teacher-image"
                             style=" width: 50px;height: 50px;border-radius: 50%;margin-right: 10px;">
-                        <span class="teacher-name">{{this.TeacherInfo.User.name}}</span>
+                        <span class="teacher-name">
+                            <a href="/teachers/{{this.TeacherInfo.id}}">{{this.TeacherInfo.User.name}}</a>
+                        </span>
 
                     </div>
                     {{/each}}

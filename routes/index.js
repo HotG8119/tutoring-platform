@@ -32,9 +32,10 @@ router.get('/teacher/:id/edit', authenticated, userController.editTeacherInfo)
 router.put('/teacher/:id', authenticated, userController.putTeacherInfo)
 router.get('/teacher/:id', authenticated, userController.getTeacherInfo)
 
-router.get('/teachers/:id', authenticated, classController.getTeacher)
 router.get('/teachers/search', authenticated, classController.getSearchedTeachers)
 router.get('/teachers', authenticated, classController.getTeachers)
+router.get('/teachers/:id', authenticated, classController.getTeacher)
+router.post('/teachers/:id/bookClass', authenticated, classController.bookClass)
 
 router.post('/classes/:id/rate', authenticated, classController.rateClass)
 

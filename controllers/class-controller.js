@@ -1,6 +1,7 @@
 const { User, TeacherInfo, Class } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const sequelize = require('sequelize')
+const dayjs = require('dayjs')
 
 const classController = {
   getTeachers: (req, res, next) => {
@@ -95,14 +96,54 @@ const classController = {
       .catch(error => next(error))
   },
   getTeacher: (req, res, next) => {
-    TeacherInfo.findOne({
-      raw: true,
-      where: { userId: req.params.id }
-    })
-      .then(teacherInfo => {
-        if (!teacherInfo) throw new Error('沒有這個老師')
-        return res.render('teachers', { teacherInfo })
+    const teacherInfoId = req.params.id
+
+    return Promise.all([
+      TeacherInfo.findByPk(teacherInfoId, {
+        raw: true,
+        nest: true,
+        include: [
+          { model: User, attributes: ['name', 'image'] }
+        ]
+      }),
+      Class.findAll({
+        raw: true,
+        nest: true,
+        // where: { teacherInfoId: teacherInfoId, rate: { [sequelize.Op.gt]: 0 } },
+        where: { teacherInfoId: teacherInfoId },
+        order: [['classTime', 'DESC']]
       })
+    ])
+      .then(([teacherInfo, classes]) => {
+        if (!teacherInfo) throw new Error('沒有這個老師')
+        // 拿到已評價的class
+        const ratedClasses = classes.filter(classData => classData.rate > 0)
+
+        // 拿到老師兩週內可預約的時間
+        // 拿到老師的duration
+        const duration = Number(teacherInfo.duration)
+        // 拿到未來已預約課程的時間 用day.js讓時間變成 mm-dd hh:mm
+        const bookedClassesTime = classes.filter(classData => classData.classTime > Date.now()).map(classData => dayjs(classData.classTime).format('YYYY-MM-DD HH:mm'))
+        console.log(bookedClassesTime)
+        // 拿到未來兩週可以預約的18:00~22:00的時間 以duration為單位
+        const availableTimes = []
+        for (let i = 0; i < 14; i++) {
+          for (let j = 18; j < 22; j++) {
+            if (duration === 30) {
+              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
+            }
+            if (duration === 60) {
+              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
+              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(30).format('YYYY-MM-DD HH:mm'))
+            }
+          }
+        }
+        // 用availableTimes扣去bookedClassesTime
+        const availableTimesAfterBooked = availableTimes.filter(availableTime => !bookedClassesTime.includes(availableTime))
+
+        return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked })
+      })
+      .catch(error => next(error))
   },
   rateClass: (req, res, next) => {
     const id = req.params.id
@@ -123,6 +164,26 @@ const classController = {
         res.redirect(`/users/${req.user.id}`)
       })
       .catch(error => next(error))
+  },
+  bookClass: (req, res, next) => {
+    const teacherInfoId = req.params.id
+    const userId = req.user.id
+    const { bookDate } = req.body
+
+    return Promise.all([
+      TeacherInfo.findByPk(teacherInfoId, { raw: true })
+    ])
+      .then(([teacherInfo]) => {
+        if (teacherInfo.userId === userId) {
+          req.flash('error_messages', '不能預約自己的課程！')
+          return res.redirect(`/teachers/${teacherInfoId}`)
+        }
+        return Class.create({
+          classTime: bookDate,
+          teacherInfoId,
+          userId
+        })
+      })
   }
 }
 
