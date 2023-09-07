@@ -3,6 +3,12 @@ const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const sequelize = require('sequelize')
 const dayjs = require('dayjs')
 
+const CAN_BOOK_DAYS = 14
+const CLASS_TIME = {
+  START: 18,
+  END: 22
+}
+
 const classController = {
   getTeachers: (req, res, next) => {
     const DEFAULT_LIMIT = 6
@@ -119,26 +125,38 @@ const classController = {
         // 拿到已評價的class
         const ratedClasses = classes.filter(classData => classData.rate > 0)
 
+        let availableWeekdays = teacherInfo.availableWeekdays ? JSON.parse(teacherInfo.availableWeekdays) : null
+        if (!availableWeekdays) {
+          return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked: ['目前沒有可預約的課程'] })
+        }
+        if (!Array.isArray(availableWeekdays)) { availableWeekdays = [availableWeekdays] }
+        availableWeekdays = availableWeekdays.map(day => Number(day))
         // 拿到老師兩週內可預約的時間
         // 拿到老師的duration
         const duration = Number(teacherInfo.duration)
         // 拿到未來已預約課程的時間 用day.js讓時間變成 mm-dd hh:mm
         const bookedClassesTime = classes.filter(classData => classData.classTime > Date.now()).map(classData => dayjs(classData.classTime).format('YYYY-MM-DD HH:mm'))
-        console.log(bookedClassesTime)
-        // 拿到未來兩週可以預約的18:00~22:00的時間 以duration為單位
+        // 以availableWeekdays拿到未來兩週可以預約的18:00~22:00的時間 以duration為單位
         const availableTimes = []
-        for (let i = 0; i < 14; i++) {
-          for (let j = 18; j < 22; j++) {
-            if (duration === 30) {
-              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
-            }
-            if (duration === 60) {
-              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
-              availableTimes.push(dayjs().add(i, 'day').hour(j).minute(30).format('YYYY-MM-DD HH:mm'))
+
+        // 用dayjs拿到今天是星期幾
+        const todayWeekday = dayjs().day()
+
+        for (let day = 0; day < CAN_BOOK_DAYS; day++) {
+          const weekday = (todayWeekday + day) % 7
+          if (availableWeekdays.includes(weekday)) {
+            for (let j = CLASS_TIME.START; j < CLASS_TIME.END; j++) {
+              if (duration === 30) {
+                availableTimes.push(dayjs().add(day, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
+                availableTimes.push(dayjs().add(day, 'day').hour(j).minute(30).format('YYYY-MM-DD HH:mm'))
+              }
+              if (duration === 60) {
+                availableTimes.push(dayjs().add(day, 'day').hour(j).minute(0).format('YYYY-MM-DD HH:mm'))
+              }
             }
           }
         }
-        // 用availableTimes扣去bookedClassesTime
+        // // 用availableTimes扣去bookedClassesTime
         const availableTimesAfterBooked = availableTimes.filter(availableTime => !bookedClassesTime.includes(availableTime))
 
         return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked })
@@ -169,21 +187,35 @@ const classController = {
     const teacherInfoId = req.params.id
     const userId = req.user.id
     const { bookDate } = req.body
+    if (!dayjs(bookDate).isValid()) throw new Error('請選擇日期！')
 
     return Promise.all([
-      TeacherInfo.findByPk(teacherInfoId, { raw: true })
+      TeacherInfo.findByPk(teacherInfoId, { raw: true }),
+      Class.findOne({
+        where: {
+          classTime: bookDate,
+          teacherInfoId
+        }
+      })
     ])
-      .then(([teacherInfo]) => {
+      .then(([teacherInfo, classes]) => {
         if (teacherInfo.userId === userId) {
           req.flash('error_messages', '不能預約自己的課程！')
           return res.redirect(`/teachers/${teacherInfoId}`)
         }
+        console.log(classes)
+        if (classes) {
+          req.flash('error_messages', '這個時段已經被預約了！')
+          return res.redirect(`/teachers/${teacherInfoId}`)
+        }
+
         return Class.create({
           classTime: bookDate,
           teacherInfoId,
           userId
         })
       })
+      .catch(error => next(error))
   }
 }
 

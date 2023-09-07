@@ -35,13 +35,15 @@
             <form action="/teachers/{{teacherInfo.id}}/bookClass" method="POST">
                 <h4>預約上課</h4>
                 <select name="bookDate" id="bookDate">
+                    <option>請選擇日期</option>
                     {{#each availableTimesAfterBooked}}
                     <option id="selected-date" value="{{this}}">{{this}}</option>
                     {{/each}}
                 </select>
 
                 <!-- Button trigger modal -->
-                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#book-class-model">
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#book-class-model"
+                    {{#unless teacherInfo.availableWeekdays}}disabled{{/unless}}>
                     預約
                 </button>
 
@@ -60,7 +62,8 @@
                                 <p id="booked-date">時間：</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button id="close-booked-button" type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">關閉</button>
                             </div>
                         </div>
                     </div>
@@ -77,10 +80,16 @@
     const buttonElement = document.getElementById('book-class');
     const selectElement = document.getElementById('bookDate');
     const bookedDateElement = document.getElementById('booked-date');
+    const closeBookedButton = document.getElementById('close-booked-button');
 
     selectElement.addEventListener('change', function () {
         const selectedDate = this.value;
         bookedDateElement.textContent = `時間：${selectedDate}`;
+    });
+
+    //當點擊closeBookedButton 重整頁面
+    closeBookedButton.addEventListener('click', function () {
+        location.reload();
     });
 
 </script>

@@ -51,7 +51,7 @@ const userController = {
         raw: true,
         nest: true,
         where: { userId },
-        order: [['classTime', 'DESC']],
+        order: [['classTime', 'ASC']],
         include: [
           {
             model: TeacherInfo,
@@ -68,14 +68,13 @@ const userController = {
     ])
       .then(([user, classes]) => {
         if (!user) throw new Error('找不到使用者！')
-        // 找出過去的課程，用day.js讓時間變成 mm-dd hh:mm
+        // 找出過去的課程，用day.js讓時間變成 mm-dd hh:mm，將排序改成由新到舊
         const pastClasses = classes.filter(classItem => {
           return new Date(classItem.classTime) < new Date()
         }).map(classItem => {
           classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
           return classItem
-        })
-        // 找出未來的課程，用day.js讓時間變成 mm-dd hh:mm
+        }).reverse()
         const futureClasses = classes.filter(classItem => {
           return new Date(classItem.classTime) >= new Date()
         }).map(classItem => {
@@ -235,8 +234,7 @@ const userController = {
   putTeacherInfo: (req, res, next) => {
     const { classIntroduce, method, duration, classLink } = req.body
     const userId = req.user.id
-    const availableWeekdaysString = JSON.stringify(req.body.availableWeekdays)
-
+    const availableWeekdaysString = req.body.availableWeekdays ? JSON.stringify(req.body.availableWeekdays) : null
     if (userId !== Number(req.params.id)) {
       req.flash('error_messages', '沒有權限！！')
       return res.redirect('/teachers')
