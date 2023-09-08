@@ -37,7 +37,7 @@ module.exports = {
         .map((_, j) => {
         // 隨機一個老師
           const randomTeacherNum = Math.floor(Math.random() * teacherInfos[0].length)
-          console.log(teacherInfos[0][randomTeacherNum])
+
           return classes.push({
             class_time: getRandomPastTime(),
             duration: teacherInfos[0][randomTeacherNum].duration,

@@ -10,6 +10,7 @@ module.exports = {
       email: 'user1@example.com',
       password: await bcrypt.hash('12345678', 10),
       introduce: 'I am user1',
+      is_user: true,
       image: 'https://i.imgur.com/hepj9ZS.png',
       created_at: new Date(),
       updated_at: new Date()
@@ -18,6 +19,7 @@ module.exports = {
       email: 'user2@example.com',
       password: await bcrypt.hash('12345678', 10),
       introduce: 'I am user2',
+      is_user: true,
       image: 'https://i.imgur.com/hepj9ZS.png',
       created_at: new Date(),
       updated_at: new Date()
@@ -27,6 +29,7 @@ module.exports = {
       email: 'user3@example.com',
       password: await bcrypt.hash('12345678', 10),
       introduce: 'I am user3',
+      is_user: true,
       image: 'https://i.imgur.com/hepj9ZS.png',
       created_at: new Date(),
       updated_at: new Date()
@@ -37,6 +40,7 @@ module.exports = {
         name: faker.name.findName(),
         email: faker.internet.email(),
         password: faker.internet.password(8),
+        is_user: true,
         image: 'https://i.imgur.com/hepj9ZS.png',
         introduce: faker.lorem.text().substring(0, 80),
         created_at: new Date(),

@@ -5,8 +5,12 @@ const passport = require('../config/passport')
 const classController = require('../controllers/class-controller')
 const userController = require('../controllers/user-controller')
 const upload = require('../middleware/multer')
-const { authenticated } = require('../middleware/auth')
+const { authenticatedUser } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
+
+const admin = require('./modules/admin')
+
+router.use('/admin', admin)
 
 router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
@@ -21,23 +25,23 @@ router.get('/auth/google/callback',
 )
 router.get('/logout', userController.logout)
 
-router.get('/users/:id/becometeacher', authenticated, userController.getBecomeTeacher)
-router.post('/users/:id/becometeacher', authenticated, userController.postBecomeTeacher)
+router.get('/users/:id/becometeacher', authenticatedUser, userController.getBecomeTeacher)
+router.post('/users/:id/becometeacher', authenticatedUser, userController.postBecomeTeacher)
 
-router.get('/users/:id/edit', authenticated, userController.editUser)
-router.get('/users/:id', authenticated, userController.getUser)
-router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+router.get('/users/:id/edit', authenticatedUser, userController.editUser)
+router.get('/users/:id', authenticatedUser, userController.getUser)
+router.put('/users/:id', authenticatedUser, upload.single('image'), userController.putUser)
 
-router.get('/teacher/:id/edit', authenticated, userController.editTeacherInfo)
-router.put('/teacher/:id', authenticated, userController.putTeacherInfo)
-router.get('/teacher/:id', authenticated, userController.getTeacherInfo)
+router.get('/teacher/:id/edit', authenticatedUser, userController.editTeacherInfo)
+router.put('/teacher/:id', authenticatedUser, userController.putTeacherInfo)
+router.get('/teacher/:id', authenticatedUser, userController.getTeacherInfo)
 
-router.get('/teachers/search', authenticated, classController.getSearchedTeachers)
-router.get('/teachers', authenticated, classController.getTeachers)
-router.get('/teachers/:id', authenticated, classController.getTeacher)
-router.post('/teachers/:id/bookClass', authenticated, classController.bookClass)
+router.get('/teachers/search', authenticatedUser, classController.getSearchedTeachers)
+router.get('/teachers', authenticatedUser, classController.getTeachers)
+router.get('/teachers/:id', authenticatedUser, classController.getTeacher)
+router.post('/teachers/:id/bookClass', authenticatedUser, classController.bookClass)
 
-router.post('/classes/:id/rate', authenticated, classController.rateClass)
+router.post('/classes/:id/rate', authenticatedUser, classController.rateClass)
 
 router.use('/', (req, res) => res.redirect('/teachers'))
 router.use('/', generalErrorHandler)

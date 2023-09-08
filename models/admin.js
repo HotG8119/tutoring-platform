@@ -16,11 +16,15 @@ module.exports = (sequelize, DataTypes) => {
   Admin.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+    isAdmin: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Admin',
-    tableName: 'Admins'
+    tableName: 'Admins',
+    underscored: true
   })
   return Admin
 }
