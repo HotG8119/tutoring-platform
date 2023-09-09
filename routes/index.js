@@ -37,9 +37,9 @@ router.put('/teacher/:id', authenticatedUser, userController.putTeacherInfo)
 router.get('/teacher/:id', authenticatedUser, userController.getTeacherInfo)
 
 router.get('/teachers/search', authenticatedUser, classController.getSearchedTeachers)
-router.get('/teachers', authenticatedUser, classController.getTeachers)
 router.get('/teachers/:id', authenticatedUser, classController.getTeacher)
 router.post('/teachers/:id/bookClass', authenticatedUser, classController.bookClass)
+router.get('/teachers', authenticatedUser, classController.getTeachers)
 
 router.post('/classes/:id/rate', authenticatedUser, classController.rateClass)
 

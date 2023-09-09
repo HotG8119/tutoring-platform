@@ -1,6 +1,10 @@
 <footer class="footer mt-auto py-3 bg-light">
     <div class="container text-center">
         <span class="text-muted">© 2023-{{ currentYear }}</span>
+        {{#if user}}
+        {{else}}
+        <a href="/admin/signin">Admin 登入</a>
+        {{/if}}
     </div>
-    <a href="/admin/signin">Admin 登入</a>
+
 </footer>

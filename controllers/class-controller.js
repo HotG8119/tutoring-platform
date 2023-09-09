@@ -115,7 +115,6 @@ const classController = {
       Class.findAll({
         raw: true,
         nest: true,
-        // where: { teacherInfoId: teacherInfoId, rate: { [sequelize.Op.gt]: 0 } },
         where: { teacherInfoId: teacherInfoId },
         order: [['classTime', 'DESC']]
       })
@@ -125,23 +124,20 @@ const classController = {
         // 拿到已評價的class
         const ratedClasses = classes.filter(classData => classData.rate > 0)
 
+        // 拿到兩週內可以預約的時間
         let availableWeekdays = teacherInfo.availableWeekdays ? JSON.parse(teacherInfo.availableWeekdays) : null
         if (!availableWeekdays) {
           return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked: ['目前沒有可預約的課程'] })
         }
         if (!Array.isArray(availableWeekdays)) { availableWeekdays = [availableWeekdays] }
         availableWeekdays = availableWeekdays.map(day => Number(day))
-        // 拿到老師兩週內可預約的時間
-        // 拿到老師的duration
+        // // 拿到老師的duration
         const duration = Number(teacherInfo.duration)
-        // 拿到未來已預約課程的時間 用day.js讓時間變成 mm-dd hh:mm
+        // // 拿到未來已預約課程的時間 用day.js讓時間變成 mm-dd hh:mm
         const bookedClassesTime = classes.filter(classData => classData.classTime > Date.now()).map(classData => dayjs(classData.classTime).format('YYYY-MM-DD HH:mm'))
-        // 以availableWeekdays拿到未來兩週可以預約的18:00~22:00的時間 以duration為單位
+        // // 以availableWeekdays拿到未來兩週可以預約的18:00~22:00的時間 以duration為單位
         const availableTimes = []
-
-        // 用dayjs拿到今天是星期幾
         const todayWeekday = dayjs().day()
-
         for (let day = 0; day < CAN_BOOK_DAYS; day++) {
           const weekday = (todayWeekday + day) % 7
           if (availableWeekdays.includes(weekday)) {
@@ -159,7 +155,14 @@ const classController = {
         // // 用availableTimes扣去bookedClassesTime
         const availableTimesAfterBooked = availableTimes.filter(availableTime => !bookedClassesTime.includes(availableTime))
 
-        return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked })
+        // 計算老師的平均評價
+        const rates = classes.map(classData => classData.rate).filter(rate => rate > 0)
+        // 將所有rate加總
+        const sumRate = rates.reduce((a, b) => a + b, 0)
+        // 計算平均 取到小數點第一位
+        const avgRate = (sumRate / rates.length).toFixed(1)
+
+        return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked, avgRate })
       })
       .catch(error => next(error))
   },
