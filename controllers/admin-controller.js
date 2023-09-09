@@ -15,7 +15,7 @@ const adminController = {
     req.logout()
     res.redirect('/admin/signin')
   },
-  getUsers: (req, res) => {
+  getUsers: (req, res, next) => {
     const DEFAULT_LIMIT = 9
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || DEFAULT_LIMIT
@@ -42,6 +42,37 @@ const adminController = {
       }))
       return res.render('admin/users', { result, pagination: getPagination(limit, page, users.count) })
     })
+      .catch(error => next(error))
+  },
+  getSearchedUsers: (req, res, next) => {
+    const keyword = req.query.keyword.replace(/[^a-zA-Z0-9]/g, '').trim()
+
+    User.findAll({
+      raw: true,
+      nest: true,
+      attributes: { exclude: ['password'] },
+      include: {
+        model: TeacherInfo,
+        attributes: ['id', 'classIntroduce', 'method', 'availableWeekdays']
+      }
+    }).then(users => {
+      const result = users.map(user => ({
+        ...user,
+        name: user.name.toLowerCase(),
+        introduce: user.introduce.toLowerCase(),
+        createdAt: dayjs(user.createdAt).format('YYYY-MM-DD'),
+        // 將availableWeekdays解析並排序
+        availableWeekdays: user.TeacherInfo.availableWeekdays
+          ? JSON.parse(user.TeacherInfo.availableWeekdays).sort((a, b) => a - b)
+          : null
+      }))
+
+      const searchedUsers = result.filter(user => {
+        return user.name.includes(keyword) || user.introduce.includes(keyword)
+      })
+      return res.render('admin/users', { result: searchedUsers, keyword })
+    })
+      .catch(error => next(error))
   }
 }
 
