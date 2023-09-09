@@ -1,22 +1,73 @@
 <form action="/users/{{user.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
-    <form action="/users/{{user.id}}?_method=PUT" method="POST">
-        <div class="mb-4 text-center">
-            <h1 class="h3 font-weight-normal mb-3">編輯個人資料</h1>
+    <div class="mb-4 text-center">
+        <h1 class="h3 font-weight-normal mb-3">編輯個人資料</h1>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="name">信箱
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEmail"
+                id="editEmailButton">更改信箱</button>
+        </label>
+        <input class="form-control" type="email" name="email" id="email" placeholder="Enter email"
+            value="{{user.email}}" required readonly>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="name">信箱再次確認</label>
+        <input class="form-control" type="email" name="emailChecked" id="emailChecked" placeholder="Enter email again"
+            value="{{user.email}}" required readonly>
+    </div>
+    <div class=" form-row mb-3">
+        <label class="form-label" for="name">姓名</label>
+        <input class="form-control" type="text" name="name" id="name" placeholder="Enter name" value="{{user.name}}"
+            required>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="introduce">介紹</label>
+        <textarea class="form-control" id="introduce" name="introduce" rows="3">{{user.introduce}}</textarea>
+    </div>
+    <div class="form-row mb-3">
+        <label class="form-label" for="image">大頭照</label>
+        <input class="form-control" type="file" class="form-control-file" id="image" name="image"
+            value="{{user.image}}">
+    </div>
+    <hr>
+    <button type="submit" class="btn btn-primary">儲存</button>
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="editEmail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">確認要修改信箱嗎?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                更改信箱會連同登入帳號一起更改，請確認是否要更改信箱
+            </div>
+            <div class="modal-footer">
+                <button id="editEmailButtonModel" type="button" class="btn btn-primary"
+                    data-bs-dismiss="modal">確定</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
         </div>
-        <div class="form-row mb-3">
-            <label class="form-label" for="name">姓名</label>
-            <input class="form-control" type="text" name="name" id="name" placeholder="Enter name" value="{{user.name}}"
-                required>
-        </div>
-        <div class="form-row mb-3">
-            <label class="form-label" for="introduce">介紹</label>
-            <textarea class="form-control" id="introduce" name="introduce" rows="3">{{user.introduce}}</textarea>
-        </div>
-        <div class="form-row mb-3">
-            <label class="form-label" for="image">大頭照</label>
-            <input class="form-control" type="file" class="form-control-file" id="image" name="image"
-                value="{{user.image}}">
-        </div>
-        <hr>
-        <button type="submit" class="btn btn-primary">儲存</button>
-    </form>
+    </div>
+</div>
+
+
+
+
+<script>
+    //當按下更改信箱按鈕時，讓emailInput的readonly屬性變成false
+    const editEmailButton = document.getElementById('editEmailButton');
+    const editEmailButtonModel = document.getElementById('editEmailButtonModel');
+    const emailInput = document.getElementById('email');
+    const emailChecked = document.getElementById('emailChecked');
+    editEmailButtonModel.addEventListener('click', function () {
+        //點擊 alert 視窗的確認後，將emailInput的readonly屬性變成false
+        editEmailButton.hidden = true;
+        emailInput.readOnly = false;
+        emailInput.value = '';
+        emailChecked.readOnly = false;
+        emailChecked.value = '';
+    });
+</script>

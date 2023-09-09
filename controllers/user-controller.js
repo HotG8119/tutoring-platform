@@ -81,9 +81,6 @@ const userController = {
           classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
           return classItem
         })
-        // console.log('classes', classes)
-        // console.log('futureClasses', futureClasses)
-        console.log('pastClasses', pastClasses)
         return res.render('users/profile', { user, futureClasses, pastClasses })
       })
       .catch(err => next(err))
@@ -99,7 +96,9 @@ const userController = {
       .catch(err => next(err))
   },
   putUser: (req, res, next) => {
-    const { name, introduce } = req.body
+    const { email, emailChecked, name, introduce } = req.body
+    if (!email) throw new Error('請輸入信箱！')
+    if (email !== emailChecked) throw new Error('兩次輸入的信箱不同！')
     if (!name) throw new Error('請輸入姓名！')
     const { file } = req
     Promise.all([
@@ -108,6 +107,7 @@ const userController = {
       .then(([user, filePath]) => {
         if (!user) throw new Error('找不到使用者！')
         return user.update({
+          email,
           name,
           introduce,
           image: filePath || user.image

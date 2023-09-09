@@ -168,12 +168,15 @@ const classController = {
   },
   rateClass: (req, res, next) => {
     const id = req.params.id
+    const userId = req.user.id
     const { rate, message } = req.body
-    if (!rate) throw new Error('請填寫評分！')
+    if (!rate) throw new Error('請選擇評分！')
 
     Class.findByPk(id)
       .then(classData => {
         if (!classData) throw new Error('沒有這個課程')
+        if (classData.userId !== userId) throw new Error('沒有權限評價這個課程')
+        if (classData.classTime > Date.now()) throw new Error('課程還沒結束，無法評價！')
 
         return classData.update({
           rate,
@@ -206,7 +209,6 @@ const classController = {
           req.flash('error_messages', '不能預約自己的課程！')
           return res.redirect(`/teachers/${teacherInfoId}`)
         }
-        console.log(classes)
         if (classes) {
           req.flash('error_messages', '這個時段已經被預約了！')
           return res.redirect(`/teachers/${teacherInfoId}`)
