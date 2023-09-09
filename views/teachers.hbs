@@ -9,7 +9,14 @@
                 </div>
                 <div class="col-md-5">
                     <h2>{{teacherInfo.User.name}}</h2>
-                    <h4>評價：<strong class="class-rate badge bg-primary">{{avgRate}}</strong></h4>
+                    <h4>評價：
+                        {{#if avgRate}}
+                        <strong class="class-rate badge bg-primary">{{avgRate}}</strong>
+                        {{else}}
+                        <span>目前沒有評價</span>
+                        {{/if}}
+                    </h4>
+                    <h4>排課時間：{{#if availableWeekdays}}週 {{availableWeekdays}}{{else}}目前沒有排課{{/if}}</h4>
                 </div>
             </div>
             <div id="introduction">
@@ -23,13 +30,31 @@
 
             <div id="class-history">
                 <h4>課程評價：</h4>
-                {{#each ratedClasses}}
-                <div class="class-info m-2">
-                    <strong class="class-rate badge bg-primary">{{this.rate}}</strong>
-                    ：
-                    <span class="class-message">{{#if this.message}}{{this.message}}{{else}}沒有留下評論{{/if}}</span>
+                {{#if topRatedClasses}}
+
+                <div>
+                    <h5>最低兩個評價</h5>
+                    {{#each topRatedClasses}}
+                    <div class="class-info m-2">
+                        <strong class="class-rate badge bg-primary">{{this.rate}}</strong>
+                        ：
+                        <span class="class-message">{{#if this.message}}{{this.message}}{{else}}沒有留下評論{{/if}}</span>
+                    </div>
+                    {{/each}}
                 </div>
-                {{/each}}
+                <div>
+                    <h5>最低兩個評價</h5>
+                    {{#each lowRatedClasses}}
+                    <div class="class-info m-2">
+                        <strong class="class-rate badge bg-primary">{{this.rate}}</strong>
+                        ：
+                        <span class="class-message">{{#if this.message}}{{this.message}}{{else}}沒有留下評論{{/if}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <p>目前沒有評價</p>
+                {{/if}}
             </div>
         </div>
         <div class="col-md-3">

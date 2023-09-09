@@ -25,6 +25,7 @@ const adminController = {
       raw: true,
       nest: true,
       attributes: { exclude: ['password'] },
+      where: { role: 'user' },
       include: {
         model: TeacherInfo,
         attributes: ['id', 'classIntroduce', 'method', 'availableWeekdays']
@@ -51,6 +52,7 @@ const adminController = {
       raw: true,
       nest: true,
       attributes: { exclude: ['password'] },
+      where: { role: 'user' },
       include: {
         model: TeacherInfo,
         attributes: ['id', 'classIntroduce', 'method', 'availableWeekdays']
@@ -76,7 +78,7 @@ const adminController = {
         return user.name.includes(keyword) || user.introduce.includes(keyword)
       })
       if (searchedUsers.length === 0) {
-        req.flash('error_messages', '查無符合條件的使用者')
+        req.flash('error_messages', `關鍵字 [${keyword}] 沒有符合搜尋條件的老師`)
         return res.redirect('/admin/users')
       }
       return res.render('admin/users', { result: searchedUsers, keyword })

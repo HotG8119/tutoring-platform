@@ -1,12 +1,12 @@
 <header>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark px-4">
         <div class="container-fluid">
-            {{#if user.isAdmin}}
+            {{#ifCond user.role 'admin'}}
             <a class="navbar-brand" href="/admin">英文家教媒合平台-Admin</a>
             {{else}}
             <a class="navbar-brand" href="/">英文家教媒合平台</a>
-            {{/if}}
-            {{#if user.isUser}}
+            {{/ifCond}}
+            {{#ifCond user.role 'user'}}
             <a href="/users/{{user.id}}"><button class="btn btn-outline-success my-sm-0 my-2">個人資料</button></a>
             {{#if user.isTeacher}}
             <a href="/teacher/{{user.id}}"><button class="btn btn-outline-success my-sm-0 my-2">老師專區</button></a>
@@ -29,8 +29,8 @@
                     </li>
                 </ul>
             </div>
-            {{/if}}
-            {{#if user.isAdmin}}
+            {{/ifCond}}
+            {{#ifCond user.role 'admin'}}
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                     <li class="nav-item">
@@ -39,7 +39,7 @@
                     </li>
                 </ul>
             </div>
-            {{/if}}
+            {{/ifCond}}
         </div>
     </nav>
 </header>

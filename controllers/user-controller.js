@@ -19,7 +19,7 @@ const userController = {
         name: req.body.name,
         email: req.body.email,
         password: hash,
-        isUser: true
+        role: 'user'
       }))
       .then(() => {
         req.flash('success_messages', '成功註冊帳號！')
@@ -82,6 +82,7 @@ const userController = {
           classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
           return classItem
         })
+        console.log('futureClasses', futureClasses)
         return res.render('users/profile', { user, futureClasses, pastClasses })
       })
       .catch(err => next(err))

@@ -15,40 +15,40 @@ const classController = {
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || DEFAULT_LIMIT
     const offset = getOffset(limit, page)
-    console.log('getTeachers')
-    // return Promise.all([
-    //   TeacherInfo.findAndCountAll({
-    //     raw: true,
-    //     nest: true,
-    //     include: [
-    //       {
-    //         model: User,
-    //         attributes: ['name', 'image']
-    //       }
-    //     ],
-    //     limit,
-    //     offset
-    //   }),
-    //   Class.findAll({ // 取得學習者學習時數前十名
-    //     raw: true,
-    //     nest: true,
-    //     where: { isDone: true },
-    //     attributes: ['userId', [sequelize.fn('SUM', sequelize.col('duration')), 'totalDuration']],
-    //     group: ['userId'],
-    //     order: [[sequelize.fn('SUM', sequelize.col('duration')), 'DESC']],
-    //     limit: 10,
-    //     include: [
-    //       {
-    //         model: User,
-    //         attributes: ['name']
-    //       }
-    //     ]
-    //   })
-    // ])
-    //   .then(([teacherInfos, topLearnUsers]) => {
-    //     return res.render('classes', { teacherInfos: teacherInfos.rows, pagination: getPagination(limit, page, teacherInfos.count), topLearnUsers })
-    //   })
-    //   .catch(error => next(error))
+
+    return Promise.all([
+      TeacherInfo.findAndCountAll({
+        raw: true,
+        nest: true,
+        include: [
+          {
+            model: User,
+            attributes: ['name', 'image']
+          }
+        ],
+        limit,
+        offset
+      }),
+      Class.findAll({ // 取得學習者學習時數前十名
+        raw: true,
+        nest: true,
+        where: { isDone: true },
+        attributes: ['userId', [sequelize.fn('SUM', sequelize.col('duration')), 'totalDuration']],
+        group: ['userId'],
+        order: [[sequelize.fn('SUM', sequelize.col('duration')), 'DESC']],
+        limit: 10,
+        include: [
+          {
+            model: User,
+            attributes: ['name']
+          }
+        ]
+      })
+    ])
+      .then(([teacherInfos, topLearnUsers]) => {
+        return res.render('classes', { teacherInfos: teacherInfos.rows, pagination: getPagination(limit, page, teacherInfos.count), topLearnUsers })
+      })
+      .catch(error => next(error))
   },
   getSearchedTeachers: (req, res, next) => {
     const keyword = req.query.keyword.replace(/[^a-zA-Z0-9]/g, '').trim()
@@ -92,8 +92,10 @@ const classController = {
         const searchedTeacherInfos = teacherInfosLowerCase.filter(teacherInfo => {
           return teacherInfo.classIntroduce.includes(keyword) || teacherInfo.name.includes(keyword)
         })
+
+        // 沒有符合搜尋條件的老師 跳出錯誤訊息 並把keyword帶回到classes頁面
         if (searchedTeacherInfos.length === 0) {
-          req.flash('error_messages', '沒有符合搜尋條件的老師')
+          req.flash('error_messages', `關鍵字 [${keyword}] 沒有符合搜尋條件的老師`)
           return res.redirect('/teachers')
         }
 
@@ -121,8 +123,10 @@ const classController = {
     ])
       .then(([teacherInfo, classes]) => {
         if (!teacherInfo) throw new Error('沒有這個老師')
-        // 拿到已評價的class
+        // 拿到已評價的class，並依照rate排序，取前兩個最高分和最低分
         const ratedClasses = classes.filter(classData => classData.rate > 0)
+        const topRatedClasses = ratedClasses.sort((a, b) => b.rate - a.rate).slice(0, 2)
+        const lowRatedClasses = ratedClasses.sort((a, b) => a.rate - b.rate).slice(0, 2)
 
         // 拿到兩週內可以預約的時間
         let availableWeekdays = teacherInfo.availableWeekdays ? JSON.parse(teacherInfo.availableWeekdays) : null
@@ -130,7 +134,8 @@ const classController = {
           return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked: ['目前沒有可預約的課程'] })
         }
         if (!Array.isArray(availableWeekdays)) { availableWeekdays = [availableWeekdays] }
-        availableWeekdays = availableWeekdays.map(day => Number(day))
+        // // 將availableWeekdays轉成數字並排序
+        availableWeekdays = availableWeekdays.map(day => Number(day)).sort((a, b) => a - b)
         // // 拿到老師的duration
         const duration = Number(teacherInfo.duration)
         // // 拿到未來已預約課程的時間 用day.js讓時間變成 mm-dd hh:mm
@@ -155,14 +160,13 @@ const classController = {
         // // 用availableTimes扣去bookedClassesTime
         const availableTimesAfterBooked = availableTimes.filter(availableTime => !bookedClassesTime.includes(availableTime))
 
-        // 計算老師的平均評價
+        // 拿到老師的平均評價
+        let avgRate = 0
         const rates = classes.map(classData => classData.rate).filter(rate => rate > 0)
-        // 將所有rate加總
         const sumRate = rates.reduce((a, b) => a + b, 0)
-        // 計算平均 取到小數點第一位
-        const avgRate = (sumRate / rates.length).toFixed(1)
+        avgRate = (sumRate / rates.length).toFixed(1)
 
-        return res.render('teachers', { teacherInfo, ratedClasses, availableTimesAfterBooked, avgRate })
+        return res.render('teachers', { teacherInfo, topRatedClasses, lowRatedClasses, availableWeekdays, availableTimesAfterBooked, avgRate })
       })
       .catch(error => next(error))
   },

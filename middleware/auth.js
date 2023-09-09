@@ -2,11 +2,9 @@ const { getUser, ensureAuthenticated } = require('../helpers/auth-helpers')
 
 const authenticatedUser = (req, res, next) => {
   // if (req.isAuthenticated)
-  if (ensureAuthenticated(req)) {
-    if (getUser(req).role === 'user') return next()
-    res.redirect('/')
+  if (ensureAuthenticated(req) && getUser(req).role === 'user') {
+    return next()
   } else {
-    if (getUser(req).role === 'admin') throw new Error('沒有 User 權限!')
     req.flash('error_messages', '請先登入！')
     res.redirect('/signin')
   }
@@ -14,9 +12,8 @@ const authenticatedUser = (req, res, next) => {
 
 const authenticatedAdmin = (req, res, next) => {
   // if (req.isAuthenticated)
-  if (ensureAuthenticated(req)) {
-    if (getUser(req).role === 'admin') return next()
-    res.redirect('/admin/')
+  if (ensureAuthenticated(req) && getUser(req).role === 'admin') {
+    return next()
   } else {
     req.flash('error_messages', '請先登入！')
     res.redirect('/admin/signin')
