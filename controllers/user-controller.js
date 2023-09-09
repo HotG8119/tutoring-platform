@@ -18,7 +18,8 @@ const userController = {
       .then(hash => User.create({
         name: req.body.name,
         email: req.body.email,
-        password: hash
+        password: hash,
+        isUser: true
       }))
       .then(() => {
         req.flash('success_messages', '成功註冊帳號！')

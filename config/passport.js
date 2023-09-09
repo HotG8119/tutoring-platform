@@ -73,7 +73,8 @@ passport.use(new GoogleStrategy(
           .then(hash => User.create({
             name,
             email,
-            password: hash
+            password: hash,
+            isUser: true
           }))
           .then(user => {
             return cb(null, user)
