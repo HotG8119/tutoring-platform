@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const { User, TeacherInfo, Class } = require('../models')
-const { localFileHandler } = require('../helpers/file-helpers')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 const dayjs = require('dayjs')
 
 const userController = {
@@ -82,7 +82,6 @@ const userController = {
           classItem.classTime = dayjs(classItem.classTime).format('MM-DD HH:mm')
           return classItem
         })
-        console.log('futureClasses', futureClasses)
         return res.render('users/profile', { user, futureClasses, pastClasses })
       })
       .catch(err => next(err))
@@ -105,7 +104,7 @@ const userController = {
     const { file } = req
     Promise.all([
       User.findByPk(req.params.id),
-      localFileHandler(file)])
+      imgurFileHandler(file)])
       .then(([user, filePath]) => {
         if (!user) throw new Error('找不到使用者！')
         return user.update({
