@@ -1,1 +1,138 @@
-users
+<div class="row" id="search-bar">
+    <div class="col-12">
+        <form action="/admins/users/search">
+            <div class="input-group mb-3">
+                <input type="text" name="keyword" class="form-control" placeholder="請輸入關鍵字" aria-label="keyword"
+                    aria-describedby="search-button" value="{{keyword}}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit" id="search-button">搜尋</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table align-middle">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">編號</th>
+            <th scope="col">姓名</th>
+            <th scope="col">是否為老師</th>
+            <th scope="col">老師資訊</th>
+        </tr>
+    </thead>
+    <div>
+        {{#each result}}
+        <tr>
+            <th scope="row">{{this.id}}</th>
+            <td>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#userInfo{{this.id}}">
+                    {{this.name}}
+                </button>
+            </td>
+            <td>{{#if this.isTeacher}}是{{else}}否{{/if}}</td>
+            <td>
+                {{#if this.isTeacher}}
+                <button type="button" class="btn btn-link" data-bs-toggle="modal"
+                    data-bs-target="#teacherInfo{{this.id}}">
+                    詳細資訊
+                </button>
+                {{/if}}
+            </td>
+        </tr>
+
+        <!-- Modal -->
+        {{!-- User Info Modal --}}
+        <div class="modal fade" id="userInfo{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">使用者資訊</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-row ">
+                        <div>
+                            <img src="{{this.image}}" alt="" style="width: 100px; height: 100px;">
+                        </div>
+                        <div>
+                            <ul style="list-style-type: none;">
+                                <li><strong>姓名：</strong>{{this.name}}</li>
+                                <li><strong>信箱：</strong>{{this.email}}</li>
+                                <li><strong>介紹：</strong>
+                                    <p>{{this.introduce}}</p>
+                                </li>
+                                <li><strong>加入時間：</strong>{{this.createdAt}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Teacher Info Modal --}}
+        {{#if this.isTeacher}}
+        <div class="modal fade" id="teacherInfo{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">使用者資訊</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-row ">
+                        <div>
+                            <img src="{{this.image}}" alt="" style="width: 100px; height: 100px;">
+                        </div>
+                        <div>
+                            <ul style="list-style-type: none;">
+                                <li><strong>可預約時間：</strong>禮拜 {{this.availableWeekdays}}</li>
+                                <li><strong>課程方式：</strong>
+                                    <p>{{this.TeacherInfo.method}}</p>
+                                </li>
+                                <li><strong>課程介紹：</strong>
+                                    <p>{{this.TeacherInfo.classIntroduce}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        {{/each}}
+        </tbody>
+</table>
+
+<nav class="mt-3" aria-label="page navigation">
+    <ul class="pagination">
+        <li class="page-item {{#ifCond pagination.currentPage 1}}disabled{{/ifCond}}">
+            <a class="page-link" href="/admin/users?page={{pagination.prev}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {{#each pagination.pages}}
+        {{#ifCond this ../pagination.currentPage}}
+        <li class="page-item active"><a class="page-link" href="#">{{this}}</a></li>
+        {{else}}
+        <li class="page-item">
+            <a class="page-link" href="/admin/users?page={{this}}">{{this}}</a>
+        </li>
+        {{/ifCond}}
+        {{/each}}
+        <li class="page-item {{#ifCond pagination.currentPage pagination.totalPage}}disabled{{/ifCond}}">
+            <a class="page-link" href="/admin/users?page={{pagination.next}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
