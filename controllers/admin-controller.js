@@ -56,20 +56,29 @@ const adminController = {
         attributes: ['id', 'classIntroduce', 'method', 'availableWeekdays']
       }
     }).then(users => {
-      const result = users.map(user => ({
-        ...user,
-        name: user.name.toLowerCase(),
-        introduce: user.introduce.toLowerCase(),
-        createdAt: dayjs(user.createdAt).format('YYYY-MM-DD'),
-        // 將availableWeekdays解析並排序
-        availableWeekdays: user.TeacherInfo.availableWeekdays
-          ? JSON.parse(user.TeacherInfo.availableWeekdays).sort((a, b) => a - b)
-          : null
-      }))
+      const result = users.map(user => {
+        return {
+          ...user,
+          name: user.name.toLowerCase(),
+          introduce: user.introduce ? user.introduce.toLowerCase() : null,
+          createdAt: dayjs(user.createdAt).format('YYYY-MM-DD'),
+          // 將availableWeekdays解析並排序
+          availableWeekdays: user.TeacherInfo.availableWeekdays
+            ? JSON.parse(user.TeacherInfo.availableWeekdays).sort((a, b) => a - b)
+            : null
+        }
+      })
 
       const searchedUsers = result.filter(user => {
+        if (!user.introduce) {
+          return user.name.includes(keyword)
+        }
         return user.name.includes(keyword) || user.introduce.includes(keyword)
       })
+      if (searchedUsers.length === 0) {
+        req.flash('error_messages', '查無符合條件的使用者')
+        return res.redirect('/admin/users')
+      }
       return res.render('admin/users', { result: searchedUsers, keyword })
     })
       .catch(error => next(error))
