@@ -21,10 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     introduce: DataTypes.TEXT,
     isTeacher: DataTypes.BOOLEAN,
-    isUser: DataTypes.BOOLEAN,
     image: {
       type: DataTypes.STRING,
       defaultValue: 'https://i.imgur.com/hepj9ZS.png'
+    },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: 'user'
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

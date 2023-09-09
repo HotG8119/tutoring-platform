@@ -20,6 +20,9 @@ module.exports = {
       introduce: {
         type: Sequelize.TEXT
       },
+      role: {
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
