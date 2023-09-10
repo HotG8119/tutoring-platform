@@ -1,5 +1,5 @@
-const { User, TeacherInfo } = require('../models')
-const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { User, TeacherInfo } = require('../../models')
+const { getOffset, getPagination } = require('../../helpers/pagination-helper')
 const dayjs = require('dayjs')
 
 const adminController = {

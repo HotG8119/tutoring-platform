@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { User, TeacherInfo, Class } = require('../models')
-const { imgurFileHandler } = require('../helpers/file-helpers')
+const { User, TeacherInfo, Class } = require('../../models')
+const { imgurFileHandler } = require('../../helpers/file-helpers')
 const dayjs = require('dayjs')
 
 const userController = {

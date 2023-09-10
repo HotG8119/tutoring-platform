@@ -1,5 +1,5 @@
-const { User, TeacherInfo, Class } = require('../models')
-const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { User, TeacherInfo, Class } = require('../../models')
+const { getOffset, getPagination } = require('../../helpers/pagination-helper')
 const sequelize = require('sequelize')
 const dayjs = require('dayjs')
 
