@@ -27,8 +27,9 @@ const classController = {
   },
   bookClass: (req, res, next) => {
     classServices.bookClass(req, (error, data) => {
+      console.log(req.params)
       if (error) return next(error)
-      return res.redirect(`/users/${data.teacherInfoId}`)
+      return res.redirect(`/teachers/${req.params.id}`)
     })
   }
 }

@@ -94,11 +94,7 @@ const classService = {
         })
 
         // 沒有符合搜尋條件的老師 跳出錯誤訊息 並把keyword帶回到classes頁面
-        if (searchedTeacherInfos.length === 0) {
-          const error = new Error(`關鍵字 [${keyword}] 沒有符合搜尋條件的老師`)
-          error.statusCode = 404
-          return cb(error, { teacherInfos, keyword, topLearnUsers })
-        }
+        if (searchedTeacherInfos.length === 0) throw new Error(`關鍵字 ${keyword} 沒有符合條件的老師`)
 
         return cb(null, { teacherInfos: searchedTeacherInfos, keyword, topLearnUsers })
       })
@@ -212,14 +208,8 @@ const classService = {
       })
     ])
       .then(([teacherInfo, classes]) => {
-        if (teacherInfo.userId === userId) {
-          req.flash('error_messages', '不能預約自己的課程！')
-          return cb(null, { teacherInfoId })
-        }
-        if (classes) {
-          req.flash('error_messages', '這個時段已經被預約了！')
-          return cb(null, { teacherInfoId })
-        }
+        if (teacherInfo.userId === userId) throw new Error('不能預約自己的課程！')
+        if (classes) throw new Error('這個時段已經被預約了！')
 
         return Class.create({
           classTime: bookDate,
@@ -227,9 +217,11 @@ const classService = {
           userId
         })
       })
+      .then(() => {
+        req.flash('success_messages', '預約成功！')
+      })
       .catch(error => cb(error))
   }
-
 }
 
 module.exports = classService
