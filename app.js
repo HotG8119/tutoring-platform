@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-
 const path = require('path')
 const express = require('express')
 const handlebars = require('express-handlebars')
@@ -13,6 +9,10 @@ const { getUser } = require('./helpers/auth-helpers')
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
 
 const routes = require('./routes')
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 const SESSION_SECRET = 'secret'
 
