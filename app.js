@@ -16,10 +16,8 @@ const { getUser } = require('./helpers/auth-helpers')
 const { pages, apis } = require('./routes')
 
 const app = express()
-const port = process.env.PORT || 3000
-const SESSION_SECRET = 'process.env.SESSION_SECRET'
-
-// const routes = require('./routes/pages')
+const port = process.env.PORT || 3001
+const SESSION_SECRET = process.env.SESSION_SECRET
 
 app.engine('hbs', handlebars({ defaultLayout: 'main', extname: '.hbs', helpers: handlebarsHelpers }))
 app.set('view engine', 'hbs')
@@ -38,7 +36,6 @@ app.use((req, res, next) => {
   next()
 })
 
-// app.use(routes)
 app.use('/api', apis)
 app.use(pages)
 

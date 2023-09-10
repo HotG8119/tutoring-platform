@@ -56,9 +56,9 @@ passport.use('admin', (new LocalStrategy(
 
 passport.use(new GoogleStrategy(
   {
-    clientID: 'process.env.GOOGLE_CLIENT_ID',
-    clientSecret: 'process.env.GOOGLE_CLIENT_SECRET',
-    callbackURL: 'GOOGLE_CLIENT_CALLBACK',
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CLIENT_CALLBACK,
     profileFields: ['email', 'displayName']
   },
   (accessToken, refreshToken, profile, cb) => {
