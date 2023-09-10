@@ -1,23 +1,25 @@
-const path = require('path')
-const express = require('express')
-const handlebars = require('express-handlebars')
-const flash = require('connect-flash')
-const methodOverride = require('method-override')
-const session = require('express-session')
-const passport = require('./config/passport')
-const { getUser } = require('./helpers/auth-helpers')
-const handlebarsHelpers = require('./helpers/handlebars-helpers')
-
-const routes = require('./routes/pages')
-
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-const SESSION_SECRET = 'secret'
+const path = require('path')
+const express = require('express')
+const handlebars = require('express-handlebars')
+const flash = require('connect-flash')
+const session = require('express-session')
+const passport = require('./config/passport')
+const methodOverride = require('method-override')
+
+const handlebarsHelpers = require('./helpers/handlebars-helpers')
+const { getUser } = require('./helpers/auth-helpers')
+
+const { pages, apis } = require('./routes')
 
 const app = express()
 const port = process.env.PORT || 3000
+const SESSION_SECRET = 'secret'
+
+// const routes = require('./routes/pages')
 
 app.engine('hbs', handlebars({ defaultLayout: 'main', extname: '.hbs', helpers: handlebarsHelpers }))
 app.set('view engine', 'hbs')
@@ -36,7 +38,9 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(routes)
+// app.use(routes)
+app.use('/api', apis)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on http://localhost:${port} !`)
