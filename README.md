@@ -6,9 +6,7 @@ npm install
 
 ### 設定 .env
 將.env.example 複製一份為 .env，並設定相關參數
-```
 
-```
 ## 共用帳號
 * 第一組 user 帳號 
   * email: user1@example.com
