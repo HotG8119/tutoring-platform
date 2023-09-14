@@ -5,7 +5,19 @@ npm install
 ```
 
 ### 設定 .env
-將.env.example 複製一份為 .env，並設定相關參數
+1. 將.env.example 複製一份為 .env，並設定相關參數
+2. 在終端機輸入以下字串，製作種子資料
+
+```bash
+npm run seed
+```
+
+3. 安裝完成後，輸入：
+
+```bash
+npm run dev
+```
+
 
 ## 共用帳號
 * 第一組 user 帳號 
