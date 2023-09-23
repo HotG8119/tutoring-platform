@@ -54,34 +54,34 @@ passport.use('admin', (new LocalStrategy(
   }
 )))
 
-// passport.use(new GoogleStrategy(
-//   {
-//     clientID: `${process.env.GOOGLE_CLIENT_ID}`,
-//     clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
-//     callbackURL: `${process.env.GOOGLE_CLIENT_CALLBACK}`,
-//     profileFields: ['email', 'displayName']
-//   },
-//   (accessToken, refreshToken, profile, cb) => {
-//     const { name, email } = profile._json
-//     User.findOne({ where: { email } })
-//       .then(user => {
-//         if (user) return cb(null, user)
-//         const randomPassword = Math.random().toString(36).slice(-8)
-//         bcrypt
-//           .genSalt(10)
-//           .then(salt => bcrypt.hash(randomPassword, salt))
-//           .then(hash => User.create({
-//             name,
-//             email,
-//             password: hash,
-//             role: 'user'
-//           }))
-//           .then(user => {
-//             return cb(null, user)
-//           })
-//           .catch(err => cb(err, false))
-//       })
-//   }))
+passport.use(new GoogleStrategy(
+  {
+    clientID: `${process.env.GOOGLE_CLIENT_ID}`,
+    clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+    callbackURL: `${process.env.GOOGLE_CLIENT_CALLBACK}`,
+    profileFields: ['email', 'displayName']
+  },
+  (accessToken, refreshToken, profile, cb) => {
+    const { name, email } = profile._json
+    User.findOne({ where: { email } })
+      .then(user => {
+        if (user) return cb(null, user)
+        const randomPassword = Math.random().toString(36).slice(-8)
+        bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(randomPassword, salt))
+          .then(hash => User.create({
+            name,
+            email,
+            password: hash,
+            role: 'user'
+          }))
+          .then(user => {
+            return cb(null, user)
+          })
+          .catch(err => cb(err, false))
+      })
+  }))
 
 // serialize and deserialize user
 passport.serializeUser((user, cb) => {
