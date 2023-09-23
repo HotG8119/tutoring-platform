@@ -17,13 +17,13 @@ router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
 router.get('/signin', userController.signInPage)
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-router.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/signin'
-  })
-)
+// router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+// router.get('/auth/google/callback',
+//   passport.authenticate('google', {
+//     successRedirect: '/',
+//     failureRedirect: '/signin'
+//   })
+// )
 router.get('/logout', userController.logout)
 
 router.get('/users/:id/becometeacher', authenticatedUser, teacherController.getBecomeTeacher)
