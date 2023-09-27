@@ -44,7 +44,7 @@ router.get('/teachers', authenticatedUser, classController.getTeachers)
 
 router.post('/classes/:id/rate', authenticatedUser, classController.rateClass)
 
-router.use('/', (req, res) => res.redirect('/teachers'))
+router.use('/', (req, res) => res.redirect('/teachers', { status: 'success' }))
 router.use('/', generalErrorHandler)
 
 module.exports = router
